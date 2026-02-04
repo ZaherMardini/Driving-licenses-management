@@ -1,13 +1,11 @@
+@props(['countries', 'mode' => 'new'])
 @php
   $modesLable = ['new' => 'Add new person', 'edit' => 'Update person info', 'read' => 'Show person info'];  
-  $routes = ['new' => 'person.store', 'edit' => 'person.update', 'read' => 'person.index'];
 @endphp
-@props(['countries', 'person' => null, 'mode' => 'new'])
 <div class="flex flex-col justify-between bg-black p-6 border border-default rounded-base w-250"
     x-data="{
     mode: @js($mode),
-    person: @js($person),
-    route: '',
+    person: null,
     get isReadMode(){return this.mode === 'read'},
     get isEditMode(){return this.mode === 'edit'},
     get isNewMode() {return this.mode === 'new'},
@@ -28,48 +26,33 @@
         address:     @js(old('address', 'def')),
         countryId:   @js(old('country_id', '1')),
     },
-    
     get setImage(){
       if(this.img.previewImage){
         return this.img.previewImage
       }
-      if(this.person){
-        return this.person.image_path;
-      }
-      return this.genderSelect === 'male' ? this.img.male : this.img.female;
-    },
-    get setGender(){
-      if(this.person){
-        return this.person.gender === 'male' ? 'male' : 'female';
-      }
-      return this.defaults.gender;
+      if (this.person?.image_path) {
+        return '/' + this.person.image_path.replace(/^\/+/, '')
+      }      
+      return this.defaults.gender === 'male' ? this.img.male : this.img.female;
     },
     handleImageUpload(event){
       const file = event.target.files[0];
       if(!file) return;
       this.img.previewImage = `${URL.createObjectURL(file)}`;
     },
-
-    setInputMode(){
-      if(this.isEditMode){
-        this.route = @js($routes['edit']);
-        return @js($person)
-      }
-    },
   }"
   @items-updated.window = "person = event.detail"
 >
   <x-custom.search mode="find" x-bind:hidden="isNewMode"/>
-  <h4 class="m-2 text-white">Person_ID: {{ $person ? $person['id'] : '' }}</h4>
+  <h4 class="m-2 text-white">Person_ID: <span x-text="person?.id"></span></h4>
   <h4 class="m-2 text-white">Mode: {{ $modesLable[$mode] }}</h4>
   <div class="flex flex-1 p-3 bg-gray-500">
-    <form id="form" action="{{ route($routes[$mode]) }}" method="post" class="" enctype="multipart/form-data">
+    <form id="form" x-bind:action="isEditMode ? `/people/update/${person?.id}` : `/people/store`" method="post" class="" enctype="multipart/form-data" x-bind:disabled="isReadMode">
       @csrf
       <div id="input_fields" class="flex">
         <div class="mx-2">
           <x-input-label for="name" value="Name"/>        
           <x-text-input id="name" name="name" type="text" x-bind:value="person ? person.name : defaults.name" x-bind:readonly="isReadMode" required autofocus autocomplete="name" class="mt-1 block w-full"/>
-          {{-- <x-text-input id="name" name="name" type="text" x-bind:value="person ? person.name : 'no person'" x-bind:readonly="isReadMode" required autofocus autocomplete="name" class="mt-1 block w-full"/> --}}
           <x-input-error :messages="$errors->get('name')"/>
           </div>
         <div class="mx-2">
@@ -114,11 +97,14 @@
           </select>
           <input type="hidden" name="country_id" x-show="isReadMode" x-bind:value="defaults.countryId">
         </div>
-        <div class="flex gap-3 items-center ml-5">
-          <input name="gender" type="radio" id="male" x-model="person ? person.gender === 'male' ? 'male' : " value="male" x-bind:disabled="isReadMode"/>
+        <div class="flex gap-3 items-center ml-5" x-bind:hidden="isReadMode">
+          <input name="gender" type="radio" id="male" x-model="defaults.gender" value="male" x-bind:disabled="isReadMode"/>
           <x-input-label for="male" value="Male"/>        
-          <input name="gender" type="radio" id="female" x-model="person ? person.gender === 'male" value="female" x-bind:disabled="isReadMode"/>
+          <input name="gender" type="radio" id="female" x-model="defaults.gender" value="female" x-bind:disabled="isReadMode"/>
           <x-input-label for="female" value="Female"/>        
+        </div>
+        <div x-show="!isNewMode" class="flex items-center mx-2">
+          <h4 class="m-2 text-white">Gender: <span class="bold" x-text="person?.gender"></span></h4>
         </div>
       </div>
       <input id="file" type="file" name="file" hidden @change="handleImageUpload">

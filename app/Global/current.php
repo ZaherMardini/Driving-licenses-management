@@ -2,7 +2,7 @@
 namespace App\Global;
 
 class Current{
-  public $test = 'test';
+  public static $person;
   public function test(){
     return 'hi there';
   }
