@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePersonRequest;
-use App\Models\Country;
-use App\Models\Person;
+use App\Enums\personCardMode;
 use App\Global\Current;
 use App\Http\Requests\UpdatePersonRequest;
+use App\Models\Person;
 use App\Services\PersonService;
 use Illuminate\Http\Request;
-use PDO;
 
 class PersonController extends Controller
 {
@@ -19,53 +18,25 @@ class PersonController extends Controller
     $this->service = $service;
   }
   public function index(){
-    $people = Person::latest();
-    $people = $people->get();
-    $columns = Person::$columns;
-    $searchBy = Person::searchBy();
-    $searchRoutes = ['filter' => 'person.filter', 'find' => 'person.find'];
-    return view('people.index', compact('people', 'columns', 'searchBy', 'searchRoutes'));
-    // $people = Person::latest()->simplePaginate(10);
+    return $this->service->index();
   }
-  public function show(Person $person){
-    $countries = Country::get();
-    return view('people.person', ['mode' => 'read', 'countries' => $countries]);
+  public function show(){
+    return view('people.person', ['mode' => personCardMode::edit->value]);
   }
   public function create(){
-    $countries = Country::get();
-    return view('people.person', ['person' => null,'countries' => $countries, 'mode' => 'new']);
+    return view('people.person', ['mode' => personCardMode::new->value]);
   }
   public function edit(){
-    $countries = Country::get();
-    return view('people.person', ['countries' => $countries, 'mode' => 'edit']);
+    return view('people.person', ['mode' => personCardMode::edit->value]);
   }
 public function store(StorePersonRequest $request){
-  dd('store');
-  $this->service->initStore($request);
-  $info = $this->service->handlePersonInfo();
-  $person = Person::create($info);
-  Current::$person = $person;
-  return redirect()->route('person.index');
-  }
+    return $this->service->store($request);
+}
   public function update(UpdatePersonRequest $request, Person $person){
-    $this->service->initUpdate($request);
-    $person->deleteImage();
-    $info = $this->service->handlePersonInfo();
-    $person->update($info);
-    return redirect()->route('person.index');
+    return $this->service->update($request, $person);
   }
-  public function filter(Request $request){ // not secure
-    $searchBy = Person::searchBy();
-    $prop = $request['prop'];
-    $value = $request['value'];
-    $people = null;
-    if($prop === 'id' && $value != ''){
-      $people = Person::where($prop, $value)->get();
-    }
-    else{
-      $people = Person::where($request['prop'],'like', '%' . $request['value'] . '%')->get();
-    }
-    return response()->json($people);
+  public function filter(Request $request){ 
+    return $this->service->filter($request);
   }
   public function findFirst(Request $request){
     $person = Person::where($request['prop'],'like', '%' . $request['value'] . '%')->first();

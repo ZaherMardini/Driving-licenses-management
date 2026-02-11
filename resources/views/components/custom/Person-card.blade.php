@@ -1,12 +1,13 @@
-@props(['mode' => 'new'])
 @php
   use App\Models\Person;
   use App\Models\Country;
+  use App\Enums\personCardMode;
   $countries = Country::get();
-  $modesLable = ['new' => 'Add new person', 'edit' => 'Update person info', 'read' => 'Show person info']; 
+  $modesLable = [personCardMode::new->value => 'Add new person', personCardMode::edit->value => 'Update person info', personCardMode::read->value => 'Show person info']; 
   $searchRoutes = Person::$searchRoutes; 
   $searchBy = Person::searchBy();
 @endphp
+@props(['mode' => personCardMode::new->value])
 <div class="flex flex-col justify-between bg-black p-6 border border-default rounded-base w-250"
     x-data="{
     mode: @js($mode),
@@ -14,11 +15,6 @@
     get isReadMode(){return this.mode === 'read'},
     get isEditMode(){return this.mode === 'edit'},
     get isNewMode() {return this.mode === 'new'},
-    img:{
-      male: '/images/defaults/male.png',
-      female: '/images/defaults/female.png',
-      previewImage: null,
-      },
       defaults:{
         name:        @js(old('name', 'default_blade')),
         email:       @js(old('email', 'default@test.com')),
@@ -28,20 +24,25 @@
         gender:      @js(old('gender', 'male')),
         address:     @js(old('address', 'def')),
         countryId:   @js(old('country_id', '1')),
+        img:{
+          male: '/images/defaults/male.png',
+          female: '/images/defaults/female.png',
+          previewImage: null,
+        },
     },
     get setImage(){
-      if(this.img.previewImage){
-        return this.img.previewImage
+      if(this.defaults.img.previewImage){
+        return this.defaults.img.previewImage
       }
       if (this.person?.image_path) {
         return '/' + this.person.image_path.replace(/^\/+/, '')
       }      
-      return this.defaults.gender === 'male' ? this.img.male : this.img.female;
+      return this.defaults.gender === 'male' ? this.defaults.img.male : this.defaults.img.female;
     },
     handleImageUpload(event){
       const file = event.target.files[0];
       if(!file) return;
-      this.img.previewImage = `${URL.createObjectURL(file)}`;
+      this.defaults.img.previewImage = `${URL.createObjectURL(file)}`;
     },
   }"
   @items-updated.window = "person = event.detail"

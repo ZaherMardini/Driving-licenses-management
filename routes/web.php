@@ -36,11 +36,11 @@ Route::middleware('auth')->group(function () {
   // User
   Route::get('/users',                [UserController::class, 'index'])->name('user.index');
   Route::get('/users/edit',           [UserController::class, 'edit'])->name('user.edit');
-  Route::post('/users/store',         [UserController::class, 'store'])->name('user.store');
   Route::post('/users/update/{user}', [UserController::class, 'update'])->name('user.update');
   Route::get('/users/show',           [UserController::class, 'show'])->name('user.show');
   // User
   });
+  Route::post('/users/store',         [UserController::class, 'store'])->name('user.store');
   Route::get('/users/create',         [UserController::class, 'create'])->name('user.create');
   Route::get('/users/filter',         [UserController::class, 'filter'])->name('user.filter');
   Route::get('/users/find',           [UserController::class, 'findFirst'])->name('user.find');

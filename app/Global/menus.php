@@ -18,8 +18,7 @@ class Menus{
     'items' => [
       'Users info'     => 'user.index',
       'New user'       => 'user.create',
-      'Show user info' => 'user.show',
-      'Edit user info' => 'user.edit',
+      'Edit user info' => 'profile.edit',
     ]
   ];
   public static function countries(){
