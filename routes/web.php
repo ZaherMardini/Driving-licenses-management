@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\ApplicationsController;
 use App\Http\Controllers\ApplicationTypesController;
-use App\Http\Controllers\LocalLicenseController;
+use App\Http\Controllers\LocalLicenceController;
 use App\Http\Controllers\PersonController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
@@ -42,12 +43,17 @@ Route::middleware('auth')->group(function () {
   Route::get('/users/show',           [UserController::class, 'show'])->name('user.show');
   // User
 
-  // Application Types & LDL
+  // Applications Types & LDL
   Route::get('/applicationTypes',    [ApplicationTypesController::class, 'index'])->name('applicationTypes.index');
-  Route::get('/localLicenses',       [LocalLicenseController::class, 'index'])->name('localLicense.index');
-  Route::get('/localLicenses/create',[LocalLicenseController::class, 'create'])->name('localLicense.create');
-  Route::post('/localLicenses/store',[LocalLicenseController::class, 'store'])->name('localLicense.store');
+  Route::get('/LocalLicences',       [LocalLicenceController::class, 'index'])->name('LocalLicence.index');
+  Route::get('/LocalLicences/create',[LocalLicenceController::class, 'create'])->name('LocalLicence.create');
+  Route::post('/LocalLicences/store',[LocalLicenceController::class, 'store'])->name('LocalLicence.store');
   // Application Types & LDL
+  // Applications
+  Route::get('/applications', [ApplicationsController::class, 'index'])->name('applications.index');
+  Route::get('/applications/create', [ApplicationsController::class, 'create'])->name('applications.create');
+  Route::post('/applications', [ApplicationsController::class, 'store'])->name('applications.store');
+  // Applications
   });
   Route::post('/users/store',         [UserController::class, 'store'])->name('user.store');
   Route::get('/users/create',         [UserController::class, 'create'])->name('user.create');

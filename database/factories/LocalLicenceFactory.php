@@ -4,10 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\LocalLicense>
- */
-class LocalLicenseFactory extends Factory
+class LocalLicenceFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,7 +14,7 @@ class LocalLicenseFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+          
         ];
     }
 }

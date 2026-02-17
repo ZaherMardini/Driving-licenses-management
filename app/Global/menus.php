@@ -8,7 +8,11 @@ class Menus{
     'title' => 'Applications',
     'options' => [
       'Application Types' => 'applicationTypes.index',
-      'New local driving license' => 'ldl.index',
+      'Applications' => 'applications.index',
+      'New local driving licence' => 'LocalLicence.create',
+      'Local driving licences' => 'LocalLicence.index',
+      'Replacement for damaged licence' => 'LocalLicence.create',
+      'Replacement for lost licence' => 'LocalLicence.create',
     ]
   ];
   public static $people = [
@@ -28,7 +32,4 @@ class Menus{
       'Edit user info' => 'profile.edit',
     ]
   ];
-  public static function countries(){
-    return Country::get();
-  }
 }

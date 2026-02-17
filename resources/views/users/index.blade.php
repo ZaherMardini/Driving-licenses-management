@@ -4,6 +4,7 @@
   :items="$users" 
   :columns="$columns" 
   :filter="true"
+  :enableSearch=true
   :searchBy="$searchBy" 
   :searchRoutes="$searchRoutes"/>
 </x-app-layout>

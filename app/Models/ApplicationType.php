@@ -12,6 +12,6 @@ class ApplicationType extends Model
     public static $columns = [
       'ID'    => 'id',
       'Title' => 'title',
-      'Fee ($)'   => 'fee',
+      'Fee ($)'   => 'fees',
     ];
 }

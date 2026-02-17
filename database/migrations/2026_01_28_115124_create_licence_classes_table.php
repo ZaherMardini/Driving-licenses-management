@@ -15,7 +15,7 @@ return new class extends Migration
         $table->id();
         $table->string('title');
         $table->text('description');
-        $table->decimal('fee', 2,2);
+        $table->decimal('fees', 5,2);
         $table->integer('minimum_allowed_age');
         $table->integer('valid_years');
         $table->timestamps();

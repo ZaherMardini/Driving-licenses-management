@@ -1,5 +1,4 @@
 @props(['items', 'columns', 'filter', 'searchBy', 'searchRoutes', 'enableSearch' => false])
-{{-- {{ dd($columns) }} --}}
 <div
   x-data="{
     items: @js($items),

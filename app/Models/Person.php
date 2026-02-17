@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -24,7 +25,12 @@ class Person extends Model
     'find' => 'person.find',
     'filter' => 'person.filter'
     ];
-
+  public function age(){
+    return date_diff(now(), $this['date_of_birth'])->y;
+  }
+  public function inAllowedAge(int $min){
+    return $this->age() >= $min;
+  }
   public static function searchBy()
     {
       return collect(self::$columns)
@@ -46,4 +52,5 @@ class Person extends Model
       Storage::disk('public')->delete($this->image_path);
   }
 }
+protected $casts = ['date_of_birth' => 'date:Y-m-d'];
 }

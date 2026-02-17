@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('test_types', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->string('description');
+            $table->decimal('fees', 5,2);
             $table->timestamps();
         });
     }

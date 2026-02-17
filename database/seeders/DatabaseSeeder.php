@@ -3,9 +3,12 @@
 namespace Database\Seeders;
 
 use App\Models\Country;
+use App\Models\LocalLicence;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,23 +18,22 @@ class DatabaseSeeder extends Seeder
      * Seed the application's database.
      */
     public function run(): void
-    {
-        // User::factory(10)->create();
+    { 
+      $this->call(TestTypesSeeder::class);        
+      $this->call(ApplicationtypesSeeder::class);
+      $this->call(licenceClassesSeeder::class);
 
-        User::factory()->create([
-          'name' => 'Test User',
-          'email' => 'test@example.com',
-          'person_id' => '1'
-        ]);
-        Country::factory()->create([
-          'name' => 'Syria',
-        ]);
-        Country::factory()->create([
-          'name' => 'Turkey',
-        ]);
-        Country::factory()->create([
-          'name' => 'UK',
-        ]);
-        $this->call(PersonSeeder::class);
+      Country::factory(5)->create();
+      // User::factory(3)
+      // ->state(new Sequence(['isActive' => 1], ['isActive' => 0]))
+      // ->create();
+      User::create([
+      'name' => 'legend',
+      'email' => 'test@example.com',
+      'person_id' => 1,
+      'isActive' => 1,
+      ]);
+
+      $this->call(PersonSeeder::class);
     }
 }

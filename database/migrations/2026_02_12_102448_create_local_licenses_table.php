@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\ApplicationStatus;
+use App\Models\Application;
 use App\Models\LicenceClass;
 use App\Models\Person;
 use App\Models\User;
@@ -15,13 +16,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('local_licenses', function (Blueprint $table) {
+        Schema::create('local_licences', function (Blueprint $table) {
           $table->id();
           $table->foreignIdFor(LicenceClass::class)->nullable(false);
-          $table->foreignIdFor(Person::class)->nullable(false);
-          $table->foreignIdFor(User::class, 'created_by_user')->nullable(false);
-          $table->decimal('fees',5,2);
-          $table->string('application_status')->default(ApplicationStatus::New->value);
+          $table->foreignIdFor(Application::class)->nullable(false);
           $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('local_licenses');
+        Schema::dropIfExists('local_licences');
     }
 };

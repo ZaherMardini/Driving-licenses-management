@@ -6,6 +6,10 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
+        <!-- Font awesome -->
+        <link href="{{ asset('assets/css/all.min.css') }}" rel="stylesheet" />
+        <link href="{{ asset('assets/css/brands.css') }}" rel="stylesheet" />
+        <link href="{{ asset('assets/css/solid.css') }}" rel="stylesheet" />
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

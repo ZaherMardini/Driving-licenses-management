@@ -44,10 +44,10 @@ class UserService{
           'people.name as person_name'
       );
     if(in_array($prop, $numeric, true) && $value != ''){
-        $results->where($prop, $value);
+      $results->where($prop, $value);
     }
     else{
-        $results->where($prop, 'like', "%{$value}%");
+      $results->where($prop, 'like', "%{$value}%");
     };
     return response()->json($results->get());
   }
