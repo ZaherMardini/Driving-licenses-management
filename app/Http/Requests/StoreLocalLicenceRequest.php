@@ -38,7 +38,7 @@ class StoreLocalLicenceRequest extends FormRequest
         }
         $personId = $this->input('person_id');
         $classId = $this->input('licence_class_id');
-        $isUniqueApplication = LocalLicence::isUniqueLocalLicenceApplication($personId, $classId);
+        $isUniqueApplication = LocalLicence::isUniqueApplication($personId, $classId);
         if (! $isUniqueApplication) {
           $validator->errors()->add(
             'person_id',

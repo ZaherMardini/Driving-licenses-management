@@ -20,7 +20,7 @@ class LocalLicence extends Model
       'Application ID' => 'application_id', 
       'Application Date' => 'created_at'
     ];
-    public static function isUniqueLocalLicenceApplication(int $person_id, int $class_id){
+    public static function isUniqueApplication(int $person_id, int $class_id){
       $count = LocalLicence::
       join('applications', 'applications.id', '=', 'local_licences.application_id')
       ->join('people', 'people.id', '=', 'applications.person_id')
