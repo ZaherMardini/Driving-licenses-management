@@ -1,10 +1,13 @@
 <?php
 namespace App\Global;
 
+use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Ramsey\Collection\Collection;
+
 class Methods{
   public static function collectQueryResults(array $columns, array $items){
-    // dump($columns);
-    // dd($items);
     $result = [];
     $results = [];
     foreach ($items as $item) {
@@ -14,5 +17,20 @@ class Methods{
     }
     $results[] = $result;
     return collect($results);
+  }
+
+  public static function filter(Builder $results,Request $request, array $searchBy, array $numericKeys){
+    $key = $request['searchKey'];
+    $value = $request['value'];
+    if(!in_array($key, $searchBy, true)){
+        return response()->json(abort('401','Invalid filter'));
+      };
+    if(in_array($key, $numericKeys, true) && $value != ''){
+      $results->where($key, $value);
+    }
+    else{
+      $results->where($key, 'like', "%{$value}%");
+    };
+    return response()->json($results->get());
   }
 }

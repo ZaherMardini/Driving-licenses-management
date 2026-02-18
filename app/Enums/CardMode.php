@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-  enum personCardMode:string {
+  enum CardMode:string {
     case read = 'read';
     case edit = 'edit';
     case new = 'new';

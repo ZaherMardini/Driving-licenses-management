@@ -1,13 +1,13 @@
 @php
   use App\Models\Person;
   use App\Models\Country;
-  use App\Enums\personCardMode;
+  use App\Enums\CardMode;
   $countries = Country::get();
-  $modesLable = [personCardMode::new->value => 'Add new person', personCardMode::edit->value => 'Update person info', personCardMode::read->value => 'Show person info']; 
+  $modesLable = [CardMode::new->value => 'Add new person', CardMode::edit->value => 'Update person info', CardMode::read->value => 'Show person info']; 
   $searchRoutes = Person::$searchRoutes; 
   $searchBy = Person::searchBy();
 @endphp
-@props(['mode' => personCardMode::new->value])
+@props(['mode' => CardMode::new->value])
 <div class="flex flex-col justify-between bg-black p-6 border border-default rounded-base w-250"
     x-data="{
     mode: @js($mode),
@@ -15,20 +15,20 @@
     get isReadMode(){return this.mode === 'read'},
     get isEditMode(){return this.mode === 'edit'},
     get isNewMode() {return this.mode === 'new'},
-      defaults:{
-        name:        @js(old('name', 'default_blade')),
-        email:       @js(old('email', 'default@test.com')),
-        phone:       @js(old('phone', 'default099999')),
-        national_no: @js(old('national_no', 'old-00')),
-        date:        @js(old('date_of_birth', '2008-01-01')),
-        gender:      @js(old('gender', 'male')),
-        address:     @js(old('address', 'def')),
-        countryId:   @js(old('country_id', '1')),
-        img:{
-          male: '/images/defaults/male.png',
-          female: '/images/defaults/female.png',
-          previewImage: null,
-        },
+    defaults:{
+      name:        @js(old('name', 'default_blade')),
+      email:       @js(old('email', 'default@test.com')),
+      phone:       @js(old('phone', 'default099999')),
+      national_no: @js(old('national_no', 'old-00')),
+      date:        @js(old('date_of_birth', '2008-01-01')),
+      gender:      @js(old('gender', 'male')),
+      address:     @js(old('address', 'def')),
+      countryId:   @js(old('country_id', '1')),
+      img:{
+        male: '/images/defaults/male.png',
+        female: '/images/defaults/female.png',
+        previewImage: null,
+      },
     },
     get setImage(){
       if(this.defaults.img.previewImage){
@@ -99,7 +99,6 @@
             <option value="{{ $country['id'] }}">{{$country['name']}}</option>
             @endforeach
           </select>
-          <input type="hidden" name="country_id" x-show="isReadMode" x-bind:value="defaults.countryId">
         </div>
         <div class="flex gap-3 items-center ml-5" x-bind:hidden="isReadMode">
           <input name="gender" type="radio" id="male" x-model="defaults.gender" value="male" x-bind:disabled="isReadMode"/>

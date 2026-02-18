@@ -4,16 +4,19 @@ namespace App\Services;
 
 use App\Enums\ApplicationStatus;
 use App\Enums\ApplicationTypes;
+use App\Global\Methods;
 use App\Http\Requests\StoreLocalLicenceRequest;
 use App\Models\Application;
 use App\Models\ApplicationType;
 use App\Models\LocalLicence;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class LocalLicenceService{
-  public function index(){
-    $items = LocalLicence::
+  public static function baseQuery()
+  {
+    return  LocalLicence::
     join('applications', 'applications.id', '=', 'local_licences.application_id')
     ->join('licence_classes', 'licence_classes.id', '=', 'local_licences.licence_class_id')
     ->join('people', 'people.id', '=', 'applications.person_id')
@@ -23,15 +26,18 @@ class LocalLicenceService{
       'people.name',
       'people.national_no',
       'applications.id as application_id',
+      'applications.status as status',
       'licence_classes.id as licence_class_id',
       'licence_classes.title as licence_class',
       'local_licences.created_at'
-    )->get();
-    foreach ($items as $item) {
-      $item->created_at = $item->created_at->format('Y-m-d');
-    }
+    );
+  }
+  public function index(){
+    $items = self::baseQuery()->get();
     $columns = LocalLicence::$columns;
-    return view('localLicence.index', compact('items', 'columns'));
+    $searchBy = LocalLicence::searchBy();
+    $searchRoutes = LocalLicence::$searchRoutes;
+    return view('localLicence.index', compact('items', 'columns', 'searchBy', 'searchRoutes'));
   }
   public function store(StoreLocalLicenceRequest $request){
     DB::transaction(function () use($request) {
@@ -50,5 +56,8 @@ class LocalLicenceService{
       LocalLicence::create($info);
       });
       return redirect()->route('applications.index');
+  }
+  public static function filter(Request $request){
+    return Methods::filter(self::baseQuery(), $request, LocalLicence::searchBy(), LocalLicence::numericKeys());
   }
 }

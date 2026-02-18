@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePersonRequest;
-use App\Enums\personCardMode;
+use App\Enums\CardMode;
 use App\Global\Current;
 use App\Http\Requests\UpdatePersonRequest;
 use App\Models\Person;
@@ -21,13 +21,13 @@ class PersonController extends Controller
     return $this->service->index();
   }
   public function show(){
-    return view('people.person', ['mode' => personCardMode::edit->value]);
+    return view('people.person', ['mode' => CardMode::read->value]);
   }
   public function create(){
-    return view('people.person', ['mode' => personCardMode::new->value]);
+    return view('people.person', ['mode' => CardMode::new->value]);
   }
   public function edit(){
-    return view('people.person', ['mode' => personCardMode::edit->value]);
+    return view('people.person', ['mode' => CardMode::edit->value]);
   }
 public function store(StorePersonRequest $request){
     return $this->service->store($request);
@@ -39,7 +39,7 @@ public function store(StorePersonRequest $request){
     return $this->service->filter($request);
   }
   public function findFirst(Request $request){
-    $person = Person::where($request['prop'],'like', '%' . $request['value'] . '%')->first();
+    $person = Person::where($request['searchKey'],'like', '%' . $request['value'] . '%')->first();
     Current::$person = $person;
     return response()->json($person);
   }

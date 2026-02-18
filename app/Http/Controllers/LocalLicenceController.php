@@ -2,17 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\ApplicationStatus;
-use App\Enums\ApplicationTypes;
+use App\Global\Methods;
 use App\Http\Requests\StoreLocalLicenceRequest;
-use App\Models\Application;
-use App\Models\ApplicationType;
-use App\Models\LocalLicence;
 use App\Services\LocalLicenceService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
 
 class LocalLicenceController extends Controller
 {
@@ -35,5 +28,8 @@ class LocalLicenceController extends Controller
     public function update(){
     dd('not implemented');
     return view('LocalLicence.create');
+  }
+  public function filter(Request $request){
+    return $this->service->filter($request);
   }
 }

@@ -2,15 +2,21 @@
 
 
 namespace App\Services;
+
+use App\Global\Methods;
 use App\Http\Requests\StorePersonRequest;
 use App\Http\Requests\UpdatePersonRequest;
 use Illuminate\Http\Request;
 use App\Models\Person;
-use Illuminate\Support\Facades\Storage;
 
 class PersonService{
   protected $request;
   protected $validInfo;
+  protected $results;
+  public function baseQuery()
+  {
+   return Person::orderBy('created_at', 'desc');
+  }
 
   public function init(Request $request){
     $this->request = $request;
@@ -40,8 +46,7 @@ class PersonService{
   }
 
   public function index(){
-    $people = Person::latest();
-    $people = $people->get();
+    $people = self::baseQuery()->get();
     $columns = Person::$columns;
     $searchBy = Person::searchBy();
     $searchRoutes = ['filter' => 'person.filter', 'find' => 'person.find'];
@@ -62,16 +67,19 @@ class PersonService{
     return redirect()->route('person.index');
   }
   public function filter(Request $request){
+    return Methods::filter(self::baseQuery(), $request, Person::searchBy(), Person::numericKeys());
+  }
+  public function filter_old(Request $request){
     $this->init($request);
     $request = $this->request;
-    $prop = $request['prop'];
+    $searchKey = $request['searchKey'];
     $value = $request['value'];
     $people = null;
-    if($prop === 'id' && $value != ''){
-      $people = Person::where($prop, $value)->get();
+    if($searchKey === 'id' && $value != ''){
+      $people = Person::where($searchKey, $value)->get();
     }
     else{
-      $people = Person::where($request['prop'],'like', '%' . $request['value'] . '%')->get();
+      $people = Person::where($request['searchKey'],'like', '%' . $request['value'] . '%')->get();
     }
     return response()->json($people);
   }

@@ -21,6 +21,9 @@ class Person extends Model
     'Address' => 'address',
     'Date of birth' => 'date_of_birth',
   ];
+  public static function numericKeys(){
+    return collect(self::$columns)->only('ID')->toArray(); 
+  }
   public static $searchRoutes = [
     'find' => 'person.find',
     'filter' => 'person.filter'

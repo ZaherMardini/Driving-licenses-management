@@ -9,11 +9,11 @@ if($routes && $searchBy){
   x-data="{
     value: '',
     search(){
-      axios.get('{{route($routeName)}}', { params: { value: this.value, prop: this.prop } })
+      axios.get('{{route($routeName)}}', { params: { value: this.value, searchKey: this.searchKey } })
       .then(response => { $dispatch('items-updated', response.data) })
     },
     open: false,
-    prop: @js(array_first($searchBy)),
+    searchKey: @js(array_first($searchBy)),
     label: 'All categories',
   }"
   {{$attributes}}
@@ -31,7 +31,7 @@ if($routes && $searchBy){
             @foreach ($searchBy as $title=>$key)
               <li class="p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded-md"
                 @click="
-                prop = '{{ $key }}';
+                searchKey = '{{ $key }}';
                 open = false;
                 "
                 >

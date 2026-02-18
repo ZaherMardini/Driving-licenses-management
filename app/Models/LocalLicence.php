@@ -18,8 +18,29 @@ class LocalLicence extends Model
       'Licence Class ID' => 'licence_class_id', 
       'Licence Class' => 'licence_class', 
       'Application ID' => 'application_id', 
-      'Application Date' => 'created_at'
+      'Passed tests' => '',
+      'Status' => 'status',
     ];
+    public static $searchRoutes = ['find'=>'localLicence.find', 'filter'=>'localLicence.filter'];
+    public static function numericKeys() {
+      return collect(self::$columns)->only('Licence ID', 'Person ID', 'Application ID', 'licence_class_id')->toArray();
+    }
+    public static function searchBy_desired(){
+      return collect(self::$columns)->only('Licence ID', 'Person ID', 'Status')->toArray();
+    }
+    public static function searchBy(){
+     return [
+      'Licence ID' => 'local_licences.id',
+      'Person ID' => 'people.id', 
+      'Person name' => 'people.name', 
+      'Person national no' => 'people.national_no',
+      'Licence Class ID' => 'local_licences.licence_class_id', 
+      'Licence Class' => 'licence_classes.title', 
+      'Application ID' => 'applications.id', 
+      'Passed tests' => '',
+      'Status' => 'status',
+      ];
+    }
     public static function isUniqueApplication(int $person_id, int $class_id){
       $count = LocalLicence::
       join('applications', 'applications.id', '=', 'local_licences.application_id')

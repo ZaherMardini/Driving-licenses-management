@@ -21,5 +21,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
       Model::unguard();
+      // Model::withCasts(['created_at' => 'date:Y-m-d']);
     }
 }

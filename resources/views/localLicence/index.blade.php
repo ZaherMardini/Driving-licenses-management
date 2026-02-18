@@ -1,8 +1,10 @@
 <x-app-layout>
-  {{-- {{ dd($items->toArray()) }} --}}
   <x-custom.list
-    :enableSearch="false"
-    :columns="$columns"
     :items="$items"
+    :columns="$columns"
+    :enableSearch="true"
+    :filter="true"
+    :searchBy="$searchBy" 
+    :searchRoutes="$searchRoutes"
   />
 </x-app-layout>

@@ -32,7 +32,7 @@ class UserController extends Controller
     return $this->service->filter($request);
   }
   public function findFirst(Request $request){
-    $user = User::where($request['prop'],'like', '%' . $request['query'] . '%')->first();
+    $user = User::where($request['searchKey'],'like', '%' . $request['query'] . '%')->first();
     return response()->json($user);
   }
 }

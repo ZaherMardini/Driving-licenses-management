@@ -32,22 +32,9 @@ class User extends Authenticatable
     'Is Active'   => 'isActive' ,
     'Person name' => 'person_name',
   ];
-    public static $itemKeys = 
-    [
-      'id',
-      'name',
-      'email',
-      'person_id',
-      'isActive',  
-    ];
-  public static $subColumns = 
-  [
-    'Person name',
-  ];
-  public static $personKeys = 
-  [
-    'name',
-  ];
+  public static function numericKeys(){
+    return collect(self::searchBy())->only(['User ID', 'Person ID'])->toArray();
+  }
   public static $searchRoutes = ['filter' => 'user.filter', 'find' => 'user.find'];
   
   public static function searchBy(){

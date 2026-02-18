@@ -55,11 +55,14 @@ Route::middleware('auth')->group(function () {
   Route::post('/applications', [ApplicationsController::class, 'store'])->name('applications.store');
   // Applications
   });
-  Route::post('/users/store',         [UserController::class, 'store'])->name('user.store');
-  Route::get('/users/create',         [UserController::class, 'create'])->name('user.create');
   Route::get('/users/filter',         [UserController::class, 'filter'])->name('user.filter');
   Route::get('/users/find',           [UserController::class, 'findFirst'])->name('user.find');
   Route::get('/people/filter',        [PersonController::class, 'filter'])->name('person.filter');
   Route::get('/people/find',          [PersonController::class, 'findFirst'])->name('person.find');
+  Route::get('/localLicences/filter', [LocalLicenceController::class, 'filter'])->name('localLicence.filter');
+  Route::get('/localLicences/find',   [LocalLicenceController::class, 'findFirst'])->name('localLicence.find');
+
+  Route::post('/users/store',         [UserController::class, 'store'])->name('user.store');
+  Route::get('/users/create',         [UserController::class, 'create'])->name('user.create');
   
   require __DIR__.'/auth.php';
