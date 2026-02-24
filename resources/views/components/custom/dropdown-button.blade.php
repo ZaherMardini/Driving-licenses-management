@@ -1,4 +1,4 @@
-@props(['title', 'menuItems'])
+@props(['title', 'menuItems', 'namedRoutes' => true])
 @php
   $dropdownDefaultButtonId = 'dropdownDefaultButton_' . uuid_create();
   $dropdownId = 'dropdown_' . uuid_create();
@@ -10,6 +10,7 @@
 <!-- Dropdown menu -->
 <div id="{{ $dropdownId }}" class="z-10 hidden bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-44">
     <ul class="p-2 text-sm text-body font-medium" aria-labelledby="{{ $dropdownDefaultButtonId }}">
+    @if($namedRoutes)
       @foreach ($menuItems as $title => $link)
       <li>
         <a href="{{route($link)}}" class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">
@@ -17,5 +18,14 @@
         </a>
       </li>
       @endforeach
+    @else
+      @foreach ($menuItems as $title => $link)
+      <li>
+        <a href="{{ $link }}" class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">
+          {{ $title }}
+        </a>
+      </li>
+      @endforeach
+    @endif
     </ul>
 </div>

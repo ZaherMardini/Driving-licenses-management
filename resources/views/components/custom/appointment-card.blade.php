@@ -1,7 +1,8 @@
 @props(['test_type','local_licence', 'person'])
 <div class="flex flex-col justify-between bg-black p-6 border border-default rounded-base w-250">
+  {{ $slot }}
   <h1 class="text-center w-fit text-white bold p-3 m-3 bg-[#6a7282] rounded-md text-2xl">Schedule <span class="text-yellow-500 bold">{{ $test_type['title'] }}</span></h1>
-  <h3 class="p-2 m-2 text-white text-xl">Licence ID: {{ $localLicence['id'] }} | Type: {{ $localLicence['licenceClass']['title'] }}</h3>
+  <h3 class="p-2 m-2 text-white text-xl">Licence ID: {{ $localLicence['id'] }} | Type: {{ $localLicence['licenceClass']['title'] }} | Fees: {{ $localLicence['licenceClass']['fees'] }}$</h3>
   <h3 class="p-2 m-2 text-white text-xl">Person ID: {{ $person['id'] }} | Person name: {{ $person['name'] }}</h3>
   <form action="{{ route('appointments.store', ['licence_id' => $local_licence['id']]) }}" method="post" id="test">
     @csrf

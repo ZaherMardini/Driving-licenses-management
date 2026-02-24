@@ -6,6 +6,7 @@ use App\Enums\ApplicationTypes;
 use App\Enums\CardMode;
 use App\Enums\TestTypes;
 use App\Global\BaseQuery;
+use App\Global\ListOptions;
 use App\Http\Requests\StoreTestAppointment;
 use App\Models\ApplicationType;
 use App\Models\LocalLicence;
@@ -18,11 +19,16 @@ class TestAppointmentController extends Controller
   public function index(){
     $appointments = BaseQuery::testAppointments()->get();
     $columns = TestAppointment::$columns;
+    $options = [];
+    // dd($appointments);
+    // foreach ($appointments as $appointment) {
+    //   $appointment['options'] = ListOptions::localLicence($appointment['local_licence_id']);
+    // }
     return view('appointments.index', compact('appointments', 'columns'));
   }
   public function create(LocalLicence $localLicence, TestType $testType){
-    $searchBy = Person::searchBy();
-    $searchRoutes = Person::$searchRoutes;
+    $searchBy = LocalLicence::searchBy();
+    $searchRoutes = LocalLicence::$searchRoutes;
     $person = Person::findOrFail($localLicence['person_id']);
     $mode = CardMode::locked->value;
     $appointments = BaseQuery::testAppointments()->where('people.id', $person['id'])->get();

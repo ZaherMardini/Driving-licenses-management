@@ -25,7 +25,7 @@ class LocalLicence extends Model
       'Status' => 'status',
       'Options' => 'testWithLicenceID',
     ];
-    public static $searchRoutes = ['find'=>'localLicence.find', 'filter'=>'localLicence.filter'];
+    public static $searchRoutes = ['find'=>'LocalLicence.find', 'filter'=>'LocalLicence.filter'];
     public static function numericKeys() {
       return collect(self::$columns)->only('Licence ID', 'Person ID', 'Application ID', 'licence_class_id')->toArray();
     }
@@ -59,6 +59,9 @@ class LocalLicence extends Model
     }
     public function licenceClass(){
       return $this->belongsTo(LicenceClass::class);
+    }
+    public function person(){
+      return $this->belongsTo(Person::class);
     }
     protected $casts = [
       'created_at' => 'date:Y-m-d',

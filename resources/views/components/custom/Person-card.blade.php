@@ -12,7 +12,7 @@
   $searchRoutes = Person::$searchRoutes; 
   $searchBy = Person::searchBy();
 @endphp
-@props(['mode' => CardMode::new->value])
+@props(['mode' => CardMode::new->value, 'initial_id'])
 <div class="flex flex-col justify-between bg-black p-6 border border-default rounded-base w-250"
     x-data="{
     mode: @js($mode),
@@ -50,7 +50,7 @@
       this.defaults.img.previewImage = `${URL.createObjectURL(file)}`;
     },
   }"
-  @items-updated.window = "person = event.detail"
+  @person-id-updated.window = "person = event.detail"
 >
   <h4 class="m-2 text-white">Person_ID: <span x-text="person?.id"></span></h4>
   <h4 class="m-2 text-white">Mode: {{ $modesLable[$mode] }}</h4>

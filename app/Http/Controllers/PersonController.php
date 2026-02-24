@@ -41,7 +41,7 @@ public function store(StorePersonRequest $request){
   public function filter(Request $request){ 
     return $this->service->filter($request);
   }
-  public function findFirst(Request $request){
+  public function find(Request $request){
     $person = Person::where($request['searchKey'],'like', '%' . $request['value'] . '%')->first();
     Current::$person = $person;
     return response()->json($person);

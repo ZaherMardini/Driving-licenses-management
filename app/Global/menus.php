@@ -10,6 +10,7 @@ class Menus{
       'Application Types' => 'applicationTypes.index',
       'Applications' => 'applications.index',
       'New local driving licence' => 'LocalLicence.create',
+      'Show licence info' => 'LocalLicence.show',
       'Local driving licences' => 'LocalLicence.index',
       'Replacement for damaged licence' => 'LocalLicence.create',
       'Replacement for lost licence' => 'LocalLicence.create',

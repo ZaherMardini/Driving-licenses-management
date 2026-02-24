@@ -18,8 +18,10 @@ class BaseQuery{
       'people.name',
       'test_types.title as test_type',
       'licence_classes.title as class',
+      'local_licences.id as local_licence_id',
       'test_appointments.appointment_date',
-      'test_appointments.paid_fees as paid_fees'
+      'test_appointments.paid_fees as paid_fees',
+      'test_appointments.isLocked',
     );
   }
 }

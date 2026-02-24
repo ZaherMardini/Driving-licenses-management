@@ -1,7 +1,8 @@
-@props(['items', 'columns'])
+@props(['items', 'columns', 'options' => false])
 <div
   x-data="{
     items: @js($items),
+    options: @js($options),
   }"
   @items-updated.window = "items = event.detail"
   >
@@ -14,7 +15,12 @@
                 {{$title}}
               </th>
               @endforeach
-            </tr>
+              @if ($options)
+                <th scope="col" class="px-6 py-3 font-medium">
+                  Options
+                </th>
+              @endif
+              </tr>
           </thead>
           <tbody>
             <template x-if="items.length === 0">
@@ -27,8 +33,8 @@
             <template x-for="item in items">
               <tr class="odd:bg-gray-400 even:bg-gray-500 border-b border-default">
                 @foreach ($columns as $title => $itemKey)
-                  <td class="px-6 py-4"x-text="item['{{$itemKey}}']"></td>
-                @endforeach
+                <td class="px-6 py-4"x-text="item['{{ $itemKey }}']"></td>
+                @endforeach                
               </tr>
             </template>
         </tbody>

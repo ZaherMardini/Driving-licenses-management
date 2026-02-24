@@ -1,10 +1,10 @@
 @php
-  use App\Global\Menus;
+  use App\Global\ListOptions;
+  // ListOptions::localLicence($appointment['local_licence_id'])
 @endphp
 
 <x-app-layout>
-  <div>
-    {{-- <x-custom.dropdown-button :title="Menus::$tests['title']" :menuItems="Menus::$tests['options']"/> --}}
+  <div x-data="{licence: ''}" @licence-id-updated.window = "licence = event.detail">
     <x-custom.search :filter="true" :searchBy="$searchBy" :routes="$searchRoutes"/>
     <x-custom.list
     :items="$items"

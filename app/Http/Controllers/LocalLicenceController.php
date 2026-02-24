@@ -19,6 +19,12 @@ class LocalLicenceController extends Controller
   public function index(){
     return $this->service->index();
   }
+  public function show(){
+    $searchBy = LocalLicence::searchBy();
+    $searchRoutes = LocalLicence::$searchRoutes;
+
+    return view('localLicence.show', compact('searchBy', 'searchRoutes'));
+  }
   public function create(){
     $searchBy = Person::searchBy();
     $searchRoutes = Person::$searchRoutes;
@@ -38,5 +44,16 @@ class LocalLicenceController extends Controller
   }
   public function filter(Request $request){
     return $this->service->filter($request);
+  }
+  public function find(Request $request){
+    $searchKey = $request['searchKey'];
+    $value = $request['value'];
+    $licence = null;
+    if(in_array($searchKey, LocalLicence::searchBy())){
+    $licence = LocalLicence::where($searchKey,$value)
+    ->with(['licenceClass', 'person'])
+    ->first(); 
+    }
+    return response()->json($licence);
   }
 }

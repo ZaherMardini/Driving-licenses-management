@@ -1,4 +1,4 @@
-@props(['filter' => true, 'searchBy', 'routes', 'initial_id' => ''])
+@props(['filter' => true, 'searchBy', 'routes', 'initial_id' => '', 'event_name' => 'items-updated'])
 @php
 $routeName = 'person.index';
 if($routes && $searchBy){
@@ -8,9 +8,10 @@ if($routes && $searchBy){
 <div
   x-data="{
     value: @js($initial_id ?: ''),
+    event_name: @js($event_name),
     search(){
       axios.get('{{route($routeName)}}', { params: { value: this.value, searchKey: this.searchKey } })
-      .then(response => { $dispatch('items-updated', response.data) })
+      .then(response => { $dispatch(this.event_name, response.data) })
     },
     open: false,
     searchKey: @js(array_first($searchBy)),

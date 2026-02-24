@@ -1,3 +1,3 @@
 <x-app-layout>
-    <x-custom.list :items="$appointments" :columns="$columns"/>
+    <x-custom.list :options="false" :items="$appointments" :columns="$columns"/>
 </x-app-layout>

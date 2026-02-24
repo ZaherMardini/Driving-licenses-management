@@ -65,11 +65,12 @@ Route::middleware('auth')->group(function () {
   // Test appointments
   });
   Route::get('/users/filter',         [UserController::class, 'filter'])->name('user.filter');
-  Route::get('/users/find',           [UserController::class, 'findFirst'])->name('user.find');
+  Route::get('/users/find',           [UserController::class, 'find'])->name('user.find');
   Route::get('/people/filter',        [PersonController::class, 'filter'])->name('person.filter');
-  Route::get('/people/find',          [PersonController::class, 'findFirst'])->name('person.find');
-  Route::get('/localLicences/filter', [LocalLicenceController::class, 'filter'])->name('localLicence.filter');
-  Route::get('/localLicences/find',   [LocalLicenceController::class, 'findFirst'])->name('localLicence.find');
+  Route::get('/people/find',          [PersonController::class, 'find'])->name('person.find');
+  Route::get('/localLicences/filter', [LocalLicenceController::class, 'filter'])->name('LocalLicence.filter');
+  Route::get('/localLicences/find',   [LocalLicenceController::class, 'find'])->name('LocalLicence.find');
+  Route::get('/localLicences/show',   [LocalLicenceController::class, 'show'])->name('LocalLicence.show');
 
   Route::post('/users/store',         [UserController::class, 'store'])->name('user.store');
   Route::get('/users/create',         [UserController::class, 'create'])->name('user.create');
