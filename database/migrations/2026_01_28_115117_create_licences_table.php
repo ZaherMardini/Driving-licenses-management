@@ -1,7 +1,9 @@
 <?php
 
+use App\Enums\LicenceStatus;
 use App\Models\Driver;
 use App\Models\LicenceClass;
+use App\Models\Person;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,12 +17,15 @@ return new class extends Migration
     {
       Schema::create('licences', function (Blueprint $table) {
         $table->id();
-        $table->foreignIdFor(LicenceClass::class);
-        $table->foreignIdFor(Driver::class);
+        $table->string('licence_number')->unique();
+        $table->foreignIdFor(LicenceClass::class)->nullable(false);
+        $table->foreignIdFor(Driver::class)->nullable(false);
+        $table->foreignIdFor(Person::class)->index()->nullable(false);
         $table->date('issue_date');
         $table->date('expiry_date');
-        $table->string('notes');
-        $table->string('status')->default('new');
+        $table->string('notes')->nullable();
+        $table->string('status')->default(LicenceStatus::new->value);
+        $table->string('image')->nullable();
         $table->timestamps();
       });
     }

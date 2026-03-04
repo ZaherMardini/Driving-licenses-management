@@ -5,7 +5,7 @@
   <h3 class="p-2 m-2 text-white text-xl">Person ID: {{ $person['id'] }} | Person name: {{ $person['name'] }}</h3>
   <form action="{{ route('appointments.store', ['licence_id' => $local_licence['id']]) }}" method="post" id="test">
     @csrf
-    @if(!$testIsPassed)
+    @if(!$testIsPassed && !$activeAppointmentExist)
       <input type="date" name="appointment_date" class="m-2 block"
       max="{{ now()->addMonths(2)->format('Y-m-d') }}" min="{{now()->format('Y-m-d')}}"/>
       <x-input-error :messages="$errors->get('appointment_date')"/>
@@ -25,6 +25,6 @@
     @php
       $path = "/tests/{$localLicence['id']}/{$testType['id']}/create";
     @endphp
-      <a href="{{ $path }}" class="text-white text-xl font-bold">Go to test</a>   
+      <a href="{{ $path }}" class="text-white text-xl font-bold p-2 m-2 bg-green-600 rounded-sm w-fit">Go to test</a>   
     @endif
 </div>

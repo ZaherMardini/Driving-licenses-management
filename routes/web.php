@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApplicationsController;
 use App\Http\Controllers\ApplicationTypesController;
+use App\Http\Controllers\LicenceController;
 use App\Http\Controllers\LocalLicenceController;
 use App\Http\Controllers\PersonController;
 use App\Http\Controllers\ProfileController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\TestAppointmentController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use App\Models\Country;
+use App\Models\Licence;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -51,6 +53,12 @@ Route::middleware('auth')->group(function () {
   Route::get('/LocalLicences/create',[LocalLicenceController::class, 'create'])->name('LocalLicence.create');
   Route::post('/LocalLicences/store',[LocalLicenceController::class, 'store'])->name('LocalLicence.store');
   // Application Types & LDL
+
+  // Issued Licence
+  Route::post('/licence/{localLicence}/create', [LicenceController::class, 'store'])->name('licence.store');
+  Route::get('/licence/{licence:licence_number}', [LicenceController::class, 'show'])->name('licence.show');
+  // Issued Licence
+
   // Applications
   Route::get('/applications', [ApplicationsController::class, 'index'])->name('applications.index');
   Route::get('/applications/create', [ApplicationsController::class, 'create'])->name('applications.create');

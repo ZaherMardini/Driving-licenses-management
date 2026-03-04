@@ -22,7 +22,6 @@ class LocalLicence extends Model
       'Application ID' => 'application_id', 
       'Passed tests' => 'passedTests',
       'Status' => 'status',
-      'Options' => 'testWithLicenceID',
     ];
     public static $searchRoutes = ['find'=>'LocalLicence.find', 'filter'=>'LocalLicence.filter'];
     public static function numericKeys() {
@@ -67,6 +66,19 @@ class LocalLicence extends Model
     }
     public function person(){
       return $this->belongsTo(Person::class);
+    }
+    public function licence_issued(){
+      $this->load('application');
+      $application_completed = $this['application']['status'] === ApplicationStatus::Completed->value;
+      $licence_exists_with_class = 
+      Licence::
+      where('licence_class_id', $this['licence_class_id'])
+      ->where('person_id', $this['person_id'])
+      ->exists(); 
+      return $application_completed && $licence_exists_with_class; 
+    } 
+    public function application(){
+      return $this->belongsTo(Application::class);
     }
     protected $casts = [
       'created_at' => 'date:Y-m-d',

@@ -60,7 +60,7 @@
       <div id="input_fields" class="flex">
         <div class="mx-2">
           <x-input-label for="name" value="Name"/>        
-          <x-text-input id="name" name="name" type="text" x-bind:value="person ? person.name : defaults.name" x-bind:readonly="isReadMode" required autofocus autocomplete="name" class="mt-1 block w-full"/>
+          <x-text-input id="name" name="name" type="text" x-bind:value="person ? person.name : defaults.name" x-bind:readonly="isReadMode" required autocomplete="name" class="mt-1 block w-full"/>
           <x-input-error :messages="$errors->get('name')"/>
           </div>
         <div class="mx-2">

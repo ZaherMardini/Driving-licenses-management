@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ApplicationStatus;
 use App\Enums\ApplicationTypes;
 use App\Enums\CardMode;
 use App\Enums\TestTypes;
 use App\Global\BaseQuery;
-use App\Global\ListOptions;
 use App\Http\Requests\StoreTestAppointment;
-use App\Models\ApplicationType;
+use App\Models\Application;
 use App\Models\LocalLicence;
 use App\Models\Person;
 use App\Models\TestAppointment;
 use App\Models\TestType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
 class TestAppointmentController extends Controller
@@ -22,10 +23,6 @@ class TestAppointmentController extends Controller
     $appointments = BaseQuery::testAppointments()->get();
     $columns = TestAppointment::$columns;
     $options = [];
-    // dd($appointments);
-    // foreach ($appointments as $appointment) {
-    //   $appointment['options'] = ListOptions::localLicence($appointment['local_licence_id']);
-    // }
     return view('appointments.index', compact('appointments', 'columns'));
   }
   public function create(LocalLicence $localLicence, TestType $testType){
@@ -58,10 +55,46 @@ class TestAppointmentController extends Controller
   }
   public function store(StoreTestAppointment $request){
     $info = $request->validated();
-    $info['paid_fees'] = TestAppointment::paidFees(TestTypes::VisionTest->value, ApplicationTypes::NewLocalLicence->value);
-    $result = TestAppointment::create($info);
-    return redirect()->route('appointments.create', ['localLicence' => $result['local_licence_id'], 'testType' => $info['test_type_id']]);
+    $appointment = DB::transaction(function() use($info) {
+      $info['paid_fees'] = TestAppointment::paidFees(TestTypes::VisionTest->value, ApplicationTypes::NewLocalLicence->value);
+      $appointment = TestAppointment::create($info);
+      $localLicence = LocalLicence::find($appointment['local_licence_id']);
+      $application = Application::where('id', $localLicence['application_id']);
+      $application->update(['status' => ApplicationStatus::Pending->value]);
+      return $appointment;
+    });
+    return redirect()->route('appointments.create', ['localLicence' => $appointment['local_licence_id'], 'testType' => $info['test_type_id']]);
   }
+
+public function store_gpt(StoreTestAppointment $request)
+{
+    $appointment = DB::transaction(function () use ($request) {
+
+        $info = $request->validated();
+
+        $info['paid_fees'] = TestAppointment::paidFees(
+            TestTypes::VisionTest->value,
+            ApplicationTypes::NewLocalLicence->value
+        );
+
+        $appointment = TestAppointment::create($info);
+
+        $localLicence = LocalLicence::find($appointment['local_licence_id']);
+
+        Application::where('id', $localLicence['application_id'])
+            ->update(['status' => ApplicationStatus::Pending->value]);
+
+        return $appointment;
+    });
+
+    return redirect()->route('appointments.create', [
+        'localLicence' => $appointment->local_licence_id,
+        'testType' => $request->test_type_id
+    ]);
+}
+
+
+
   public function find(Request $request){
     $appointments = BaseQuery::testAppointments()->where('test_appointments.id', $request['value'])->get();
     foreach ($appointments as $appointment) {

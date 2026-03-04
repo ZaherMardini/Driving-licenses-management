@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Enums\CardMode;
 use App\Global\BaseQuery;
-use App\Global\Methods;
 use App\Http\Requests\StoreLocalLicenceRequest;
+use App\Models\Licence;
 use App\Models\LocalLicence;
 use App\Models\Person;
 use App\Services\LocalLicenceService;
@@ -49,16 +49,23 @@ class LocalLicenceController extends Controller
   public function find(Request $request){
     $searchKey = $request['searchKey'];
     $value = $request['value'];
-    $licence = null;
+    $localLicence = null;
     if(in_array($searchKey, LocalLicence::searchBy())){
-    $licence = LocalLicence::where($searchKey,$value)
+    $localLicence = LocalLicence::where($searchKey,$value)
     ->with(['licenceClass', 'person'])
     ->first(); 
-    if($licence){
-      $licence['passedTests'] = BaseQuery::passedTests($licence['id']);
+    if($localLicence){
+      $localLicence['passedTests'] = BaseQuery::passedTests($localLicence['id']);
+      if($localLicence->licence_issued()){
+        $result = Licence::
+        where('licence_class_id', $localLicence['licence_class_id'])
+        ->where('person_id', $localLicence['person_id'])
+        ->first()->licence_number; 
+        $localLicence['licence_number'] = $result;
+      }
+        $localLicence['licence_issued'] = $localLicence->licence_issued();
     }
-    // dd($licence);
     }
-    return response()->json($licence);
+    return response()->json($localLicence);
   }
 }
