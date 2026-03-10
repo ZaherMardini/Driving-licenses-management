@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ApplicationStatus;
+use App\Enums\LicenceActions;
 use App\Enums\LicenceStatus;
 use App\Global\Current;
 use App\Global\Methods;
+use App\Http\Requests\DetainReleaseLicenceRequest;
 use App\Http\Requests\StoreLicenceRequest;
 use App\Models\Application;
 use App\Models\Driver;
@@ -59,10 +61,22 @@ class LicenceController extends Controller
     return view('licence.show', 
     compact( 'licences','licence', 'columns', 'routes', 'searchBy'));
   }
-  public function operations(){
-    return view('licence.operations');
+  public function operations(Licence $licence){
+    $licence->load(['person:id,name', 'licence_class:id,title']);
+    return view('licence.operations', compact('licence'));
   }
-
+  public function detainRelease(Licence $licence, DetainReleaseLicenceRequest $request){
+    $info = $request->validated();
+    $action = $info['licence_action'];
+    if($action === LicenceActions::detain->value){
+      $licence->update(['status' => LicenceStatus::detained->value]);
+    }
+    else if($action === LicenceActions::release->value){
+      $licence->update(['status' => LicenceStatus::new->value]);
+    }
+    $licence->load(['person:id,name', 'licence_class:id,title']);
+    return redirect()->route('licence.operations', compact('licence'));
+  }
   public function find(Request $request){
     $searchKey = $request['searchKey'];
     $value = $request['value'];
@@ -72,7 +86,6 @@ class LicenceController extends Controller
       ->where($searchKey,$value)
       ->with(['licence_class:id,title', 'person:id,name'])
       ->first();
-      // dd($licence);
       if($licence){
         $licence['title'] = $licence['licence_class']['title'];
       }

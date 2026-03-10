@@ -3,14 +3,15 @@
 namespace App\View\Components;
 
 use App\Models\Licence;
-use App\Models\LocalLicence;
 use Illuminate\View\Component;
 
 class DrivingLicenceCard extends Component
 {
     public $licence;
-    public function __construct(Licence $licence) {
+    public $hideOperationsButton;
+    public function __construct(Licence $licence, bool $hideOperationsButton = true) {
       $this->licence = $licence;
+      $this->hideOperationsButton = $hideOperationsButton;
     }
 
     public function render()

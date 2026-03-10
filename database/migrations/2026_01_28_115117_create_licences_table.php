@@ -21,8 +21,8 @@ return new class extends Migration
         $table->foreignIdFor(LicenceClass::class)->nullable(false);
         $table->foreignIdFor(Driver::class)->nullable(false);
         $table->foreignIdFor(Person::class)->index()->nullable(false);
-        $table->date('issue_date');
-        $table->date('expiry_date');
+        $table->date('issue_date')->nullable(false);
+        $table->date('expiry_date')->nullable(false);
         $table->string('notes')->nullable();
         $table->string('issue_reason')->nullable(false);
         $table->string('status')->default(LicenceStatus::new->value);

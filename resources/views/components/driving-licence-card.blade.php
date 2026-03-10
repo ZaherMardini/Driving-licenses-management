@@ -2,24 +2,25 @@
   $statusColors = [
     'Active' => 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
     'Expired' => 'bg-red-500/20 text-red-400 border-red-500/30',
-    'Suspended' => 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+    'Detained' => 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
   ];
   $status = $licence['status'];
   $statusClass = $statusColors[$status] ?? $statusColors['Active'];
 @endphp
 
-<div class="w-full max-w-md mx-auto"
+<div class="w-md m-1"
   x-data="{
     licence:      @js($licence),
     status:       @js($licence['status']),
     statusColors: @js($statusColors),
     statusClass:  @js($statusColors[$status] ?? $statusColors['Expired']),
+    get route() { return `/licence/${this.licence?.id}/operations` },
     handleStatusColors(){
       this.status = this.licence?.status;
       this.statusClass = this.statusColors[this.status] ?? this.statusColors['Expired'];
     },
   }"
-  @licence-card-updated.window = "licence = event.detail; handleStatusColors()";
+  @licence-card-updated.window = "licence = event.detail; handleStatusColors(); route";
 >
     <div class="relative rounded-2xl overflow-hidden shadow-2xl 
                 bg-zinc-900 border border-zinc-700">
@@ -69,7 +70,7 @@
             <div class="border-t border-zinc-700"></div>
 
             <!-- Information Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+            <div class="grid grid-cols-2 grid-rows-2 gap-4 text-sm">
 
                 <div>
                     <p class="text-zinc-400 text-xs uppercase tracking-wide">Issue Date</p>
@@ -85,7 +86,14 @@
                     ></p>
                 </div>
 
-                <div class="sm:col-span-2">
+                <div class="">
+                    <p class="text-zinc-400 text-xs uppercase tracking-wide">Issue Reason</p>
+                    <p class="text-white font-medium mt-1"
+                      x-text="licence?.notes"
+                    >
+                    </p>
+                </div>
+                <div class="">
                     <p class="text-zinc-400 text-xs uppercase tracking-wide">Notes</p>
                     <p class="text-white font-medium mt-1"
                       x-text="licence?.notes"
@@ -97,6 +105,12 @@
 
         <!-- Subtle Bottom Accent -->
         <div class="absolute bottom-0 left-0 w-full h-1 bg-linear-to-r from-indigo-600 via-blue-600 to-cyan-500"></div>
-
+      </div>
+      @if (!$hideOperationsButton)
+        <div class="m-5">
+          <a x-bind:href="route"
+          class="w-full mt-2 bg-white text-black font-medium p-3 rounded-lg hover:bg-zinc-200 transition"
+          >Licence operations</a>
+        </div>
+      @endif
     </div>
-</div>

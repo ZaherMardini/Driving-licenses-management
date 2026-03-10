@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\LicenceStatus;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -37,6 +39,13 @@ class Licence extends Model
     }
     public function driver(){
       return $this->belongsTo(Driver::class);
+    }
+    public function isDetained(){
+      return $this['status'] === LicenceStatus::detained->value;
+    }
+    public function isExpired(){
+      $expiryDate = Carbon::parse($this['expiry_date']);
+      return now()->gt($expiryDate);
     }
     public function person(){
       return $this->belongsTo(Person::class);

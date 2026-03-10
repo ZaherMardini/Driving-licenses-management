@@ -1,6 +1,6 @@
 <x-app-layout>
   <div class="flex flex-col gap-5">
-    <div>
+    <div class="flex flex-col items-center w-full">
       <h1 class="text-white text-xl font-bold m-5">Recent issued licence</h1>
       <x-custom.search
       event_name="licence-card-updated"

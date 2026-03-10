@@ -5,6 +5,6 @@ namespace App\Enums;
 enum LicenceStatus: string
 {
   case new = 'Active';
-  case suspended = 'Suspended';
+  case detained = 'Detained';
   case expired = 'Expired';
 }

@@ -54,17 +54,21 @@ Route::middleware('auth')->group(function () {
   // Application Types & LDL
 
   // Issued Licence
-  Route::post('/licence/{localLicence}/create',   [LicenceController::class, 'store'])     ->name('licence.store');
-  Route::get('/licence/find',                     [LicenceController::class, 'find'])      ->name('licence.find');
-  Route::get('/licence/filter',                     [LicenceController::class, 'filter'])  ->name('licence.filter');
-  Route::get('/licence/{licence:licence_number}', [LicenceController::class, 'show'])->where('licence', '^LIC-\d{4}-\d{5}$')      ->name('licence.show');
-  Route::get('/licence/{licence}/operations',     [LicenceController::class, 'operations'])->name('licence.operations');
+  Route::get('/licence/find',                       [LicenceController::class, 'find'])         ->name('licence.find');
+  Route::get('/licence/filter',                     [LicenceController::class, 'filter'])       ->name('licence.filter');
+  Route::get('/licence/{licence:licence_number}',   [LicenceController::class, 'show'])->where('licence', '^LIC-\d{4}-\d{5}$')->name('licence.show');
+  Route::get('/licence/{licence}/operations',       [LicenceController::class, 'operations'])   ->name('licence.operations');
+  Route::post('/licence/{localLicence}/create',     [LicenceController::class, 'store'])        ->name('licence.store');
+  Route::patch('/licence/{licence}/detainRelease',  [LicenceController::class, 'detainRelease'])->name('licence.detainRelease');
+  Route::patch('/licence/{licence}/release',        [LicenceController::class, 'release'])      ->name('licence.release');
+  Route::post('/licence/{licence}/renew',           [LicenceController::class, 'renew'])        ->name('licence.renew');
+  Route::post('/licence/{licence}/replace',         [LicenceController::class, 'replace'])      ->name('licence.replace');
   // Issued Licence
 
   // Applications
-  Route::get('/applications', [ApplicationsController::class, 'index'])->name('applications.index');
+  Route::get('/applications', [ApplicationsController::class, 'index'])        ->name('applications.index');
   Route::get('/applications/create', [ApplicationsController::class, 'create'])->name('applications.create');
-  Route::post('/applications', [ApplicationsController::class, 'store'])->name('applications.store');
+  Route::post('/applications', [ApplicationsController::class, 'store'])       ->name('applications.store');
   // Applications
   
   // Test appointments
