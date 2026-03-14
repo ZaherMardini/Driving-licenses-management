@@ -27,16 +27,24 @@ class PersonController extends Controller
     return view('people.person', compact('searchBy','searchRoutes','mode'));
   }
   public function create(){
-    return view('people.person', ['mode' => CardMode::new->value]);
+    $searchBy = [];
+    $searchRoutes = [];
+    $mode = CardMode::new->value;
+    return view('people.person', compact('mode', 'searchBy', 'searchRoutes'));
   }
   public function edit(){
-    return view('people.person', ['mode' => CardMode::edit->value]);
+    $searchBy = Person::searchBy(); 
+    $searchRoutes = Person::$searchRoutes;
+    $mode = CardMode::edit->value;
+    return view('people.person', compact('mode', 'searchBy', 'searchRoutes'));
   }
 public function store(StorePersonRequest $request){
-    return $this->service->store($request);
+  $this->service->store($request);
+  return redirect()->route('person.index'); 
 }
   public function update(UpdatePersonRequest $request, Person $person){
-    return $this->service->update($request, $person);
+    $this->service->update($request, $person);
+    return redirect()->route('person.index');
   }
   public function filter(Request $request){ 
     return $this->service->filter($request);

@@ -8,7 +8,7 @@
       :routes="$routes"
       :searchBy="$searchBy"
       />
-      <x-driving-licence-card id="licence"  :licence="$licence"/>
+      <x-driving-licence-card id="licence"  :licence="$licence" :hideOperationsButton="false"/>
       <button id="btn" 
       class="cursor-pointer w-fit mt-2 bg-white text-black font-medium p-2.5 rounded-lg hover:bg-zinc-200 transition"
       onclick="downloadPDF()">Download Licence</button>

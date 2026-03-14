@@ -57,14 +57,12 @@ class PersonService{
     $person->deleteImage();
     $info = $this->handlePersonInfo();
     $person->update($info);
-    return redirect()->route('person.index');
   }
   public function store(StorePersonRequest $request){
     $this->initStore($request);
     $request = $this->request;
     $info = $this->handlePersonInfo();
     Person::create($info);
-    return redirect()->route('person.index');
   }
   public function filter(Request $request){
     return Methods::filter(self::baseQuery(), $request, Person::searchBy(), Person::numericKeys());

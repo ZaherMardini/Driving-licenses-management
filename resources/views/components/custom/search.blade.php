@@ -1,4 +1,4 @@
-@props(['filter' => true, 'searchBy', 'routes', 'initial_id' => '', 'event_name' => 'items-updated'])
+@props(['filter' => true, 'searchBy' => [], 'routes' => [], 'initial_id' => '', 'event_name' => 'items-updated'])
 @php
 $routeName = 'person.index';
 if($routes && $searchBy){

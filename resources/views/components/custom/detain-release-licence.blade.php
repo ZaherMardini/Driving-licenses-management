@@ -42,6 +42,28 @@
             <x-input-error :messages="$errors->get('licence_action')"/>
         </div>
 
+        <!-- Fees Preview -->
+        <div class="rounded-xl border border-zinc-800 bg-zinc-950 p-4">
+
+            <div class="flex justify-between text-sm text-zinc-400">
+                <span>Replacement fee</span>
+                <span>€20</span>
+            </div>
+
+            <div class="flex justify-between text-sm text-zinc-400 mt-2">
+                <span>Administrative fee</span>
+                <span>€4</span>
+            </div>
+
+            <div class="border-t border-zinc-800 mt-3 pt-3 flex justify-between font-medium text-white">
+                <span>Total</span>
+                <span>€24</span>
+            </div>
+
+        </div>
+
+
+
         <!-- Submit -->
         <button 
             type="submit"
