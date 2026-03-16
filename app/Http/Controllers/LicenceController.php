@@ -73,8 +73,15 @@ class LicenceController extends Controller
     $searchBy = Licence::searchBy();
     $routes = Licence::$searchRoutes;
     $menu = Menus::licenceOperations($licence['id']);
+    $release = ApplicationTypes::ReleaseDetained->value;
+    $damaged = ApplicationTypes::DamagedReplacement->value;
+    $lost = ApplicationTypes::LostReplacement->value;
+    $renew = ApplicationTypes::RenewLicence->value;
+
     return view('licence.show', 
-    compact( 'licences','licence', 'columns', 'routes', 'searchBy', 'menu'));
+    compact( 'licences','licence', 'columns', 'routes', 'searchBy', 'menu',
+    'release', 'damaged', 'lost', 'renew'
+    ));
   }
   public function operations(Licence $licence){
     $licence->load(['person:id,name', 'licence_class:id,title']);
@@ -100,10 +107,17 @@ class LicenceController extends Controller
       DB::transaction(function() use($licence){
         $licence->update(['status' => LicenceStatus::new->value]);
         $detained = DetainedLicence::where('licence_id', $licence['id'])->first();
+        // get the release application
         $releaseApplication = LicenceOperationApplication
         ::where('licence_id', $licence['id'])
         ->where('application_type_id', ApplicationTypes::ReleaseDetained->value)
+        ->whereHas('application', function($q){
+          $q->where('status', ApplicationStatus::New->value);
+        })
         ->with('application:id,status')->first();
+          // get the release application
+
+        // dd($releaseApplication->toArray());
         $releaseApplication = $releaseApplication['application'];
         $releaseApplication->update(['status' => ApplicationStatus::Completed->value]);
         $fine = Fine::findOrFail(FineActions::release->value)['ammount'];
@@ -151,7 +165,7 @@ class LicenceController extends Controller
     $this->service->createLicenceOperationApplication($licence, $applicationType);
     return redirect()->route('applications.index');
   }
-  public function renew(Licence $licence){
+  public function renew(Licence $licence, RenewLicenceRequest $request){
     dd($licence);
   }
 }

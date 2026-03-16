@@ -1,8 +1,10 @@
 <x-app-layout>
   <div class="flex flex-col gap-5"
   x-data="{
-    licence: null,
+    licence: @js($licence),
+    test:'',
     get route() { return `/licence/${this.licence?.id}/operations` },  
+    get action(){ return `/licenceOperationApplication/${this.licence?.id}/${this?.test}` },
   }"
   @licence-card-updated.window="licence = event.detail; route"
   >
@@ -15,15 +17,27 @@
       :searchBy="$searchBy"
       />
       <x-driving-licence-card id="licence"  :licence="$licence" :hideOperationsButton="false"/>
-      <x-custom.dropdown-button :enableNamedRoutes="false" :title="$menu['title']" :menuItems="$menu['options']"/>
-      <form action="{{"/licenceOperationApplication/{$licence['id']}/6"}}" method="post">
+      {{-- <x-custom.dropdown-button :enableNamedRoutes="false" :title="$menu['title']" :menuItems="$menu['options']"/> --}}
+      <form x-bind:action="action" method="post">
         @csrf
         <input type="hidden" name="licence_id" value="{{ $licence['id'] }}">
         <x-input-error :messages="$errors->get('licence_id')"/>
-        <input type="hidden" name="licence_action" value="release">
+        {{-- <input type="hidden" name="licence_action" value="release"> --}}
         <x-input-error :messages="$errors->get('licence_action')"/>
-        <button class="text-white fornt-bold p-1 bg-blue-400" type="submit">Test release Application</button>
-          {{-- <select name="" id=""></select> --}}
+        <h1 class="m-5 font-bold text-white">selected value: <span x-text="action"></span></h1>
+          <select 
+          name="service_type"
+           x-model="test"
+          class="inline-flex items-center justify-center text-white bg-[#1e2838] shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5"
+           >
+            <option value="0" disabled selected>Select Licence service</option>
+            <option value="{{ $renew }}">renew</option>
+            <option value="{{ $lost }}">lost</option>
+            <option value="{{ $damaged }}">damaged</option>
+            <option value="{{ $release }}">release</option>
+          </select>
+        <button class="cursor-pointer text-white bg-[#1e2838] shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5" 
+        type="submit">test Application</button>
       </form>
       <button 
         id="btn" 

@@ -24,11 +24,13 @@
 
                 <input
                     type="radio"
-                    name="licence_action"
-                    value="renew"
+                    name="licence_service"
+                    value="3"
                     class="w-4 h-4 text-indigo-500 border-zinc-700 bg-zinc-900 focus:ring-indigo-500"
                 >
-
+                <x-input-error :messages="$errors->get('licence_service')"/>
+                <input type="hidden" name="licence_id" value="{{ $licence['id'] }}">
+                <x-input-error :messages="$errors->get('licence_id')"/>
                 <span class="text-zinc-200 text-sm font-medium">
                     Renew licence
                 </span>

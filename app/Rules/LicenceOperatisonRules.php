@@ -6,12 +6,12 @@ use App\Models\Licence;
 class LicenceOperatisonRules{
   public static function baseRules(){
     return [
-      'licence_action' => ['required'],
+      'licence_service' => ['required'],
       'licence_id' => ['required', 'exists:licences,id'],
     ];
   }
   public static function operationApplicationExists($request, $validator, $licence){
-    $typeId = Licence::$action2TypeId[$request->input('licence_action')];
+    $typeId = $request->input('licence_service');
     $applicationExists = Licence::applicationExists($licence, $typeId);
     if(!$applicationExists){
       $errorMessage = 'You need an application for this service.';
@@ -21,7 +21,7 @@ class LicenceOperatisonRules{
     }
   }
   public static function operationApplicationDuplicated($request, $validator, $licence){
-    $typeId = Licence::$action2TypeId[$request->input('licence_action')];
+    $typeId = $request->input('service_type');
     $applicationExists = Licence::applicationExists($licence, $typeId);
     if($applicationExists){
       $errorMessage = 'There is an application for this service.';

@@ -23,12 +23,13 @@ class RenewLicenceRequest extends FormRequest
      */
     public function rules(): array
     {
+      // dd($this->toArray());
       return LicenceOperatisonRules::baseRules();
     }
     public function detainedLicenceCase($validator, $licence){
       if($licence->isDetained()){
         $validator->errors()->add(
-          'licence_action',
+          'licence_service',
           'Release licence first.'
         );
       }

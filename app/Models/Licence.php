@@ -43,7 +43,8 @@ class Licence extends Model
         ::where('licence_id', $licence['id'])
         ->where('application_type_id', $typeId)
         ->whereHas('application', function($q){
-          $q->where('status', [ApplicationStatus::New->value, ApplicationStatus::Pending->value]);
+          $q->where('status', '=',ApplicationStatus::New->value)
+          ->orWhere('status', '=', ApplicationStatus::Pending->value);
       })
       ->exists();
     }

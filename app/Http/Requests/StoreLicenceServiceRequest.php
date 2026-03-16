@@ -24,9 +24,10 @@ class StoreLicenceServiceRequest extends FormRequest
      */
     public function rules(): array
     {
+      // dd($this->toArray());
       return [
         // LicenceOperatisonRules::baseRules()
-      'licence_action' => ['required'],
+      'service_type' => ['required'],
       'licence_id' => ['required', 'exists:licences,id'],
 
       ];
