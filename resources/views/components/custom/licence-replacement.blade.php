@@ -1,4 +1,4 @@
-@props(['licence'])
+@props(['licence', 'services', 'fines'])
 <div class="max-w-md w-full bg-zinc-900/90 backdrop-blur border border-zinc-800 rounded-2xl shadow-xl p-6 space-y-6">
 
     <!-- Title -->
@@ -22,7 +22,7 @@
 
                 <input
                     type="radio"
-                    name="replacement_type"
+                    name="licence_action"
                     value="lost"
                     class="w-4 h-4 text-amber-500 border-zinc-700 bg-zinc-900 focus:ring-amber-500"
                 >
@@ -38,7 +38,7 @@
 
                 <input
                     type="radio"
-                    name="replacement_type"
+                    name="licence_action"
                     value="damaged"
                     class="w-4 h-4 text-amber-500 border-zinc-700 bg-zinc-900 focus:ring-amber-500"
                 >

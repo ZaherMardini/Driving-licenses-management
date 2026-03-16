@@ -4,9 +4,10 @@ namespace App\Http\Requests;
 
 use App\Models\Licence;
 use App\Rules\LicenceOperatisonRules;
+
 use Illuminate\Foundation\Http\FormRequest;
 
-class RenewLicenceRequest extends FormRequest
+class StoreLicenceServiceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,24 +24,17 @@ class RenewLicenceRequest extends FormRequest
      */
     public function rules(): array
     {
-      return LicenceOperatisonRules::baseRules();
-    }
-    public function detainedLicenceCase($validator, $licence){
-      if($licence->isDetained()){
-        $validator->errors()->add(
-          'licence_action',
-          'Release licence first.'
-        );
-      }
+      return [
+        // LicenceOperatisonRules::baseRules()
+      'licence_action' => ['required'],
+      'licence_id' => ['required', 'exists:licences,id'],
+
+      ];
     }
     public function withValidator($validator){
       $validator->after(function($validator){
-        if($validator->errors()->has('licence_action')){
-          return;
-        }
         $licence = Licence::findOrFail($this->input('licence_id'));
-        LicenceOperatisonRules::operationApplicationExists($this, $validator, $licence);
-        self::detainedLicenceCase($validator, $licence);
+        LicenceOperatisonRules::operationApplicationDuplicated($this, $validator, $licence);
       });
     }
 }

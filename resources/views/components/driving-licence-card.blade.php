@@ -14,13 +14,12 @@ $statusColors = [
     status:       @js($licence['status']),
     statusColors: @js($statusColors),
     statusClass:  @js($statusColors[$status] ?? $statusColors['Expired']),
-    get route() { return `/licence/${this.licence?.id}/operations` },
     handleStatusColors(){
       this.status = this.licence?.status;
       this.statusClass = this.statusColors[this.status] ?? this.statusColors['Expired'];
     },
   }"
-  @licence-card-updated.window="licence = event.detail; handleStatusColors(); route"
+  @licence-card-updated.window="licence = event.detail; handleStatusColors();"
 >
 
 <div {{ $attributes }} style="

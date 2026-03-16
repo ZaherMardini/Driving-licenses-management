@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Licence;
+use App\Models\LicenceOperation;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,13 +13,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('application_types', function (Blueprint $table) {
-          $table->id();
-          $table->string('title');
-          $table->decimal('fees', 5, 2);
-          $table->decimal('base_application_fee',5,2)->default(5);
-          $table->timestamps();
-        });
+      Schema::create('licence_operations', function (Blueprint $table) {
+        $table->id();
+        $table->string('title');
+        $table->timestamps();
+      });
     }
 
     /**
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('application_types');
+        Schema::dropIfExists('licence_operations');
     }
 };

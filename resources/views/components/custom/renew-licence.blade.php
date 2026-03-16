@@ -1,4 +1,7 @@
-@props(['licence'])
+@props(['licence', 'services', 'fines'])
+@php
+  $formAction = "/licence/{$licence['id']}/renew";
+@endphp
 <div class="max-w-md w-full bg-zinc-900/90 backdrop-blur border border-zinc-800 rounded-2xl shadow-xl p-6 space-y-6">
 
     <!-- Title -->
@@ -11,9 +14,9 @@
         </p>
     </div>
 
-    <form method="POST" action="#" class="space-y-5">
+    <form method="POST" action="{{ route('licence.renew', ['licence' => $licence['id']]) }}" class="space-y-5">
         @csrf
-
+        @method('patch')
         <!-- Renewal Option -->
         <div class="space-y-3">
 
@@ -21,7 +24,7 @@
 
                 <input
                     type="radio"
-                    name="renew_option"
+                    name="licence_action"
                     value="renew"
                     class="w-4 h-4 text-indigo-500 border-zinc-700 bg-zinc-900 focus:ring-indigo-500"
                 >

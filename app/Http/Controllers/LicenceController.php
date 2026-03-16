@@ -3,26 +3,38 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ApplicationStatus;
+use App\Enums\ApplicationTypes;
+use App\Enums\FineActions;
 use App\Enums\LicenceActions;
 use App\Enums\LicenceIssueReasons;
 use App\Enums\LicenceStatus;
-use App\Global\Current;
+use App\Global\Menus;
 use App\Global\Methods;
 use App\Http\Requests\DetainReleaseLicenceRequest;
+use App\Http\Requests\RenewLicenceRequest;
+use App\Http\Requests\StoreApplicationRequest;
 use App\Http\Requests\StoreLicenceRequest;
+use App\Http\Requests\StoreLicenceServiceRequest;
 use App\Models\Application;
+use App\Models\ApplicationType;
+use App\Models\DetainedLicence;
 use App\Models\Driver;
+use App\Models\Fine;
 use App\Models\Licence;
+use App\Models\LicenceOperationApplication;
 use App\Models\LocalLicence;
-use App\Models\Person;
+use App\Services\LicenceService;
 use Carbon\Carbon;
-use Database\Seeders\LocalLicenceSeeder;
+use Illuminate\Container\Attributes\Auth as AttributesAuth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class LicenceController extends Controller
 {
-  public function baseQuery(){
+  protected $service;
+  public function __construct(LicenceService $service){
+    $this->service = $service;
   }
   public function store(LocalLicence $localLicence, StoreLicenceRequest $request){
     $info = $request->validated();
@@ -60,21 +72,50 @@ class LicenceController extends Controller
     $columns = Licence::$columns;
     $searchBy = Licence::searchBy();
     $routes = Licence::$searchRoutes;
+    $menu = Menus::licenceOperations($licence['id']);
     return view('licence.show', 
-    compact( 'licences','licence', 'columns', 'routes', 'searchBy'));
+    compact( 'licences','licence', 'columns', 'routes', 'searchBy', 'menu'));
   }
   public function operations(Licence $licence){
     $licence->load(['person:id,name', 'licence_class:id,title']);
-    return view('licence.operations', compact('licence'));
+    $services = ApplicationType::get();
+    $services = $services->keyBy('id');
+    $fines = Fine::get();
+    $fines = $fines->keyBy('id');
+    return view('licence.operations', compact('licence', 'services', 'fines'));
   }
   public function detainRelease(Licence $licence, DetainReleaseLicenceRequest $request){
     $info = $request->validated();
     $action = $info['licence_action'];
     if($action === LicenceActions::detain->value){
-      $licence->update(['status' => LicenceStatus::detained->value]);
+      DB::transaction(function() use($licence){
+        $licence->update(['status' => LicenceStatus::detained->value]);
+        DetainedLicence::create([
+          'licence_id' => $licence['id'],
+          'created_by_user_id' => Auth::id(),
+        ]);
+      });
     }
     else if($action === LicenceActions::release->value){
-      $licence->update(['status' => LicenceStatus::new->value]);
+      DB::transaction(function() use($licence){
+        $licence->update(['status' => LicenceStatus::new->value]);
+        $detained = DetainedLicence::where('licence_id', $licence['id'])->first();
+        $releaseApplication = LicenceOperationApplication
+        ::where('licence_id', $licence['id'])
+        ->where('application_type_id', ApplicationTypes::ReleaseDetained->value)
+        ->with('application:id,status')->first();
+        $releaseApplication = $releaseApplication['application'];
+        $releaseApplication->update(['status' => ApplicationStatus::Completed->value]);
+        $fine = Fine::findOrFail(FineActions::release->value)['ammount'];
+        $detained->update([
+          'released_by_user_id' => Auth::id(),
+          'release_date'        => now(),
+          'release_application_id' => $releaseApplication['id'],
+          'isReleased'          => true,
+          'fine'                => $fine,
+          ]);
+
+      });
     }
     $licence->load(['person:id,name', 'licence_class:id,title']);
     return redirect()->route('licence.operations', compact('licence'));
@@ -103,5 +144,14 @@ class LicenceController extends Controller
       $licence['title'] = $licence['licence_class']['title'];
     }
     return response()->json($licences);
+    }
+  public function createOperationApplication(Licence $licence, ApplicationType $applicationType, StoreLicenceServiceRequest $request){
+    // dd([$request->toArray(), $licence, $applicationType]);   
+    // $info = $request->validated();
+    $this->service->createLicenceOperationApplication($licence, $applicationType);
+    return redirect()->route('applications.index');
+  }
+  public function renew(Licence $licence){
+    dd($licence);
   }
 }
