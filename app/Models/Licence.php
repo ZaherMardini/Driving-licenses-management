@@ -63,6 +63,9 @@ class Licence extends Model
     public function isDetained(){
       return $this['status'] === LicenceStatus::detained->value;
     }
+    public function isDeactivated(){
+      return $this['status'] === LicenceStatus::deactivated->value;
+    }
     public function isExpired(){
       $expiryDate = Carbon::parse($this['expiry_date']);
       return now()->gt($expiryDate);

@@ -32,21 +32,19 @@ class RenewLicenceRequest extends FormRequest
     ];
 
     }
-    public function detainedLicenceCase($validator, $licence){
-      if($licence->isDetained()){
-        $validator->errors()->add(
-          'licence_renew_service',
-          'Release licence first.'
-        );
-      }
+    public function detainedLicenceCase($validator){
+      return 
+      $validator->errors()->add(
+        'licence_renew_service',
+        'Release licence first.'
+      );
     }
-    public function ExpiredLicenceCase($validator, $licence){
-      if(!$licence->isExpired()){
-        $validator->errors()->add(
-          'licence_renew_service',
-          'Licence is not expired.'
-        );
-      }
+    public function ExpiredLicenceCase($validator){
+      return 
+      $validator->errors()->add(
+        'licence_renew_service',
+        'Licence is not expired.'
+      );
     }
     public function withValidator($validator){
       $validator->after(function($validator){
@@ -54,8 +52,15 @@ class RenewLicenceRequest extends FormRequest
           return;
         }
         $licence = Licence::findOrFail($this->input('licence_id'));
-        self::ExpiredLicenceCase($validator, $licence);
-        self::detainedLicenceCase($validator, $licence);
+        if($licence->isDeactivated()){
+          return LicenceOperatisonRules::deactivatedLicenceCase($validator, 'licence_renew_service');
+        }
+        if(!$licence->isExpired()){
+          return self::ExpiredLicenceCase($validator);
+        }
+        if($licence->isDetained()){
+          return self::detainedLicenceCase($validator);
+        }
         $this['licence_service'] = ApplicationTypes::RenewLicence->value;
         LicenceOperatisonRules::operationApplicationExists($this, $validator, $licence);
       });

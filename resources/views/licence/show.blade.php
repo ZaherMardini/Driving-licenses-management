@@ -2,12 +2,14 @@
   <div class="flex flex-col gap-5"
   x-data="{
     licence: @js($licence),
-    serviceId:'3',
+    serviceId: '',
+    get activeLicence() { return this.licence?.status !== 'Deactivated' },
     get route() { return `/licence/${this.licence?.id}/operations` },  
     get action(){ return `/licenceOperationApplication/${this.licence?.id}/${this?.serviceId}` },
   }"
-  @licence-card-updated.window="licence = event.detail; route"
+  @licence-card-updated.window="licence = event.detail; route; activeLicence"
   >
+    <h1 class="text-white font-bold" x-show="activeLicence">Active licence</h1>
     <div class="flex flex-col items-center w-full">
       <h1 class="text-white text-xl font-bold m-5">
         Recent issued licence for <span class="text-cyan-300">{{ $licence['person']['name'] }}</span>
@@ -24,26 +26,34 @@
           <form x-bind:action="action" method="post">
             @csrf
             <input type="hidden" name="licence_id" value="{{ $licence['id'] }}">
-            <x-input-error :messages="$errors->get('licence_id')"/>
-            <x-input-error :messages="$errors->get('licence_action')"/>
-              <select
+            <select
+                x-show="activeLicence"
                 name="service_type"
                 x-model="serviceId"
-                class="inline-flex items-center justify-center text-white bg-[#1e2838] shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5">
-                  <option value="0" disabled selected>Select Licence service</option>
-                  <option value="{{ $renew }}">Renew</option>
-                  <option value="{{ $lost }}">Lost</option>
-                  <option value="{{ $damaged }}">Damaged</option>
-                  <option value="{{ $release }}">Release</option>
-              </select>
-              <button
-                class="cursor-pointer text-white bg-[#1e2838] shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5"
-                type="submit">Submit Application
-              </button>
+                class="mb-4 w-full text-white bg-[#1e2838] border border-zinc-700 rounded-xl text-sm px-4 py-2.5
+                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                hover:border-zinc-500 transition">
+              <option value="" disabled>Select Licence service</option>
+              <option value="{{ $renew }}">Renew Licence</option>
+              <option value="{{ $lost }}">Replace lost licence</option>
+              <option value="{{ $damaged }}">Replace damaged licence</option>
+              <option value="{{ $release }}">Release detained licence</option>
+            </select>
+
+            <button
+                x-show="activeLicence"
+                type="submit"
+                class="w-full bg-blue-500 text-white font-semibold rounded-xl px-4 py-2.5
+                      hover:bg-blue-400 active:scale-[0.98]
+                      focus:outline-none focus:ring-2 focus:ring-blue-500
+                      transition shadow-lg shadow-blue-900/40">
+                Submit Application
+            </button>
           </form>
         </div>
         <div id="pdfOperations" class="flex gap-5 m-3">
           <a
+            x-show="activeLicence"
             x-bind:href="route"
             class="text-center p-2.5 rounded-md bg-[#3b82f6] text-white font-bold">
             Licence operations
@@ -56,7 +66,10 @@
           </button>
         </div>
       </div>
+      <x-input-error :messages="$errors->get('licence_id')"/>
+      <x-input-error :messages="$errors->get('licence_action')"/>
     </div>
+
     <div>
       <h1 class="text-white text-xl font-bold m-5">Licence history</h1>
       <x-custom.search

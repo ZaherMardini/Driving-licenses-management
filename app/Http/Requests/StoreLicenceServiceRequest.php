@@ -24,17 +24,17 @@ class StoreLicenceServiceRequest extends FormRequest
      */
     public function rules(): array
     {
-      // dd($this->toArray());
       return [
-        // LicenceOperatisonRules::baseRules()
       'service_type' => ['required'],
       'licence_id' => ['required', 'exists:licences,id'],
-
       ];
     }
     public function withValidator($validator){
       $validator->after(function($validator){
         $licence = Licence::findOrFail($this->input('licence_id'));
+        if($licence->isDeactivated()){
+          return LicenceOperatisonRules::deactivatedLicenceCase($validator, 'licence_id');
+        }
         LicenceOperatisonRules::operationApplicationDuplicated($this, $validator, $licence);
       });
     }

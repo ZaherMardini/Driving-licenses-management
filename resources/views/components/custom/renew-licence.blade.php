@@ -1,7 +1,8 @@
 @props(['licence', 'services', 'fines'])
 @php
+  use App\Enums\ApplicationTypes;
   $formAction = "/licence/{$licence['id']}/renew";
-  dd();
+  $service = $services[ApplicationTypes::RenewLicence->value];
 @endphp
 <div class="max-w-md w-full bg-zinc-900/90 backdrop-blur border border-zinc-800 rounded-2xl shadow-xl p-6 space-y-6">
 
@@ -42,17 +43,17 @@
 
             <div class="flex items-center justify-between text-sm text-zinc-400">
                 <span>Base renewal fee</span>
-                <span>€25</span>
+                <span>{{ $service['fees'] }} $</span>
             </div>
 
             <div class="flex items-center justify-between text-sm text-zinc-400 mt-2">
                 <span>Processing fee</span>
-                <span>€5</span>
+                <span>{{ $service['base_application_fee'] }} $</span>
             </div>
 
             <div class="border-t border-zinc-800 mt-3 pt-3 flex justify-between font-medium text-white">
                 <span>Total</span>
-                <span>€30</span>
+                <span>{{ $service['base_application_fee'] + $service['fees'] }} $</span>
             </div>
 
         </div>

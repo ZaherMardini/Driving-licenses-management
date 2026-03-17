@@ -24,7 +24,6 @@ class ReplaceLicenceRequest extends FormRequest
      */
     public function rules(): array
     {
-      // dd($this->toArray());
       return [
         'licence_id' => ['required', 'exists:licences,id'],
         'licence_replacement_service' => ['required'],
@@ -35,11 +34,15 @@ class ReplaceLicenceRequest extends FormRequest
         if($validator->errors()->has('licence_replacement_service')){
             return;
         }
-        // dd('hit after validation');
         $licence = Licence::findOrFail($this->input('licence_id'));
+        if($licence->isDeactivated()){
+          return LicenceOperatisonRules::deactivatedLicenceCase($validator, 'licence_replacement_service');
+        }
+        if($licence->isDetained()){
+          return $validator->errors()->add('licence_replacement_service', 'Release licence first');
+        }
         $typeId = Licence::$action2TypeId[ $this['licence_replacement_service'] ];
         $this['licence_service'] = $typeId;
-        // dd($this['licence_service']);
         LicenceOperatisonRules::operationApplicationExists($this, $validator, $licence, 'licence_replacement_service');
       });
     }

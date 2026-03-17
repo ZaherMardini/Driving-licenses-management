@@ -10,6 +10,9 @@ class LicenceOperatisonRules{
       'licence_id' => ['required', 'exists:licences,id'],
     ];
   }
+  public static function deactivatedLicenceCase($validator, string $errorPlaceHolder = 'licence_service'){
+    return $validator->errors()->add($errorPlaceHolder, 'No services allowed for deactivated licences.');
+  }
   public static function operationApplicationExists($request, $validator, $licence, string $errorPlaceHolder = 'licence_service'){
     $typeId = $request->input('licence_service');
     $applicationExists = Licence::applicationExists($licence, $typeId);

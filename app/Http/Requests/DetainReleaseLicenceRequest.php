@@ -8,6 +8,7 @@ use App\Enums\LicenceActions;
 use App\Models\Licence;
 use App\Models\LicenceOperationApplication;
 use App\Models\ReleaseLicenceApplication;
+use App\Rules\LicenceOperatisonRules;
 use Illuminate\Foundation\Http\FormRequest;
 
 class DetainReleaseLicenceRequest extends FormRequest
@@ -40,6 +41,9 @@ class DetainReleaseLicenceRequest extends FormRequest
         $isDetainOption = $this->input('licence_action') === LicenceActions::detain->value;
         $isReleaseOption = $this->input('licence_action') === LicenceActions::release->value;
         $licence = Licence::findOrFail($this->input('licence_id'));
+        if($licence->isDeactivated()){
+          return LicenceOperatisonRules::deactivatedLicenceCase($validator, 'licence_action');
+        }
         $isDetainedLicence = $licence->isDetained();
         $errorMessage = '';
         if($isDetainOption && $isDetainedLicence){
