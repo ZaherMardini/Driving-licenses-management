@@ -119,23 +119,4 @@ $statusColors = [
     </div>
 
 </div>
-
-@if (!$hideOperationsButton)
-<div style="margin-top:12px;">
-  <a x-bind:href="route"
-     style="
-        display:block;
-        text-align:center;
-        padding:10px;
-        border-radius:8px;
-        background:#3b82f6;
-        color:white;
-        text-decoration:none;
-        font-weight:600;
-     ">
-     Licence operations
-  </a>
-</div>
-@endif
-
 </div>

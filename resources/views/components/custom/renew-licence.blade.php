@@ -21,22 +21,19 @@
         <div class="space-y-3">
 
             <label class="group flex items-center gap-3 p-4 rounded-xl border border-zinc-800 bg-zinc-900 hover:border-indigo-500/60 hover:bg-zinc-800/70 transition cursor-pointer">
-
                 <input
                     type="radio"
-                    name="licence_service"
+                    name="licence_renew_service"
                     value="3"
                     class="w-4 h-4 text-indigo-500 border-zinc-700 bg-zinc-900 focus:ring-indigo-500"
-                >
-                <x-input-error :messages="$errors->get('licence_service')"/>
-                <input type="hidden" name="licence_id" value="{{ $licence['id'] }}">
-                <x-input-error :messages="$errors->get('licence_id')"/>
+                />
                 <span class="text-zinc-200 text-sm font-medium">
                     Renew licence
                 </span>
-
-            </label>
-
+                <input type="hidden" name="licence_id" value="{{ $licence['id'] }}">
+              </label>
+              <x-input-error :messages="$errors->get('licence_renew_service')"/>
+              <x-input-error :messages="$errors->get('licence_id')"/>
         </div>
 
         <!-- Fees Section -->

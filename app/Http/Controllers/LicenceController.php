@@ -107,19 +107,7 @@ class LicenceController extends Controller
       DB::transaction(function() use($licence){
         $licence->update(['status' => LicenceStatus::new->value]);
         $detained = DetainedLicence::where('licence_id', $licence['id'])->first();
-        // get the release application
-        $releaseApplication = LicenceOperationApplication
-        ::where('licence_id', $licence['id'])
-        ->where('application_type_id', ApplicationTypes::ReleaseDetained->value)
-        ->whereHas('application', function($q){
-          $q->where('status', ApplicationStatus::New->value);
-        })
-        ->with('application:id,status')->first();
-          // get the release application
-
-        // dd($releaseApplication->toArray());
-        $releaseApplication = $releaseApplication['application'];
-        $releaseApplication->update(['status' => ApplicationStatus::Completed->value]);
+        $releaseApplication = LicenceOperationApplication::getApplication($licence, ApplicationTypes::ReleaseDetained->value);
         $fine = Fine::findOrFail(FineActions::release->value)['ammount'];
         $detained->update([
           'released_by_user_id' => Auth::id(),
@@ -160,12 +148,20 @@ class LicenceController extends Controller
     return response()->json($licences);
     }
   public function createOperationApplication(Licence $licence, ApplicationType $applicationType, StoreLicenceServiceRequest $request){
-    // dd([$request->toArray(), $licence, $applicationType]);   
-    // $info = $request->validated();
     $this->service->createLicenceOperationApplication($licence, $applicationType);
     return redirect()->route('applications.index');
   }
   public function renew(Licence $licence, RenewLicenceRequest $request){
-    dd($licence);
+    $licence->load('licence_class:id,valid_years');
+    $currentExpiryDate = $licence['expiry_date'];
+    $validYears = $licence['licence_class']['valid_years'];
+    $renewedDate = Carbon::parse($currentExpiryDate)->addYears($validYears);
+    $licence->update([
+      'expiry_date' => $renewedDate,
+      'status' => 'Active',
+      'issue_reason' => LicenceIssueReasons::renewed->value
+    ]);
+    LicenceOperationApplication::completeApplication($licence, ApplicationTypes::RenewLicence->value);
+    return redirect()->route('applications.index');
   }
 }
