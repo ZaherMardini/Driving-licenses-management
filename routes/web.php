@@ -56,10 +56,6 @@ Route::middleware(['auth', 'hasAccessTo:' . permissions::View->value])->group(fu
 });
 
 Route::middleware(['auth', 'hasAccessTo:' . permissions::Create->value])->group(function () {
-// People
-  Route::get('/people/create', [PersonController::class, 'create'])->name('person.create');
-  Route::post('/people/store', [PersonController::class, 'store'])->name('person.store');
-// People
 // Applications Types & LDL
   Route::get('/LocalLicences/create',[LocalLicenceController::class, 'create'])->name('localLicence.create');
   Route::post('/LocalLicences/store',[LocalLicenceController::class, 'store'])->name('localLicence.store');
@@ -125,5 +121,9 @@ Route::middleware('auth')->group(function () {
 
   // Route::post('/users/store',         [UserController::class, 'store'])->name('user.store');
   // Route::get('/users/create',         [UserController::class, 'create'])->name('user.create');
-  
+  // People
+  Route::get('/people/create', [PersonController::class, 'create'])->name('person.create');
+  Route::post('/people/store', [PersonController::class, 'store'])->name('person.store');
+// People
+
   require __DIR__.'/auth.php';

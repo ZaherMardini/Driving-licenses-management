@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\permissions;
 use App\Models\Country;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -30,6 +31,7 @@ class DatabaseSeeder extends Seeder
       'email' => 'test@example.com',
       'person_id' => 1,
       'isActive' => 1,
+      'permissions' => permissions::Sudo->value,
       ]);
 
       $this->call(PersonSeeder::class);

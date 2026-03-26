@@ -54,6 +54,7 @@
   @person-id-updated.window = "person = event.detail;"
 >
   <h1 class="mb-4 text-2xl font-semibold text-gray-100">{{ $modesLable[$mode] }}</h1>
+  <a x-show="!isNewMode" href="{{ route('person.create') }}" class="w-fit rounded-md mb-4 text-md font-semibold bg-green-400 p-2 text-white">Add new person</a>
   <h4 class="mb-6 text-gray-300" x-show="!isNewMode">Person ID: <span x-text="person?.id"></span></h4>
 
   <div class="flex flex-col md:flex-row gap-6">
@@ -105,6 +106,15 @@
                         class="mt-1 block w-full rounded-md bg-gray-800 border border-gray-700 text-gray-100 placeholder-gray-400 focus:border-indigo-500 focus:ring focus:ring-indigo-500/20"/>
           <x-input-error :messages="$errors->get('date_of_birth')"/>
         </div>
+
+        <!-- Gender (readonly) -->
+        <div>
+          <x-input-label for="gender" value="Gender"/>
+          <x-text-input id="gender" type="text" 
+                        x-show="isReadMode" readonly
+                        x-bind:value="person?.gender"
+                        class="mt-1 block w-full rounded-md bg-gray-800 border border-gray-700 text-gray-100 placeholder-gray-400 focus:border-indigo-500 focus:ring focus:ring-indigo-500/20"/>
+        </div>
       </div>
 
       <!-- Address and country -->
@@ -126,7 +136,6 @@
               <option value="{{ $country['id'] }}">{{$country['name']}}</option>
             @endforeach
           </select>
-
           <div class="flex items-center gap-4 mt-2" x-bind:hidden="isReadMode">
             <label class="flex items-center gap-1 text-white font-bold">
               <input name="gender" type="radio" x-model="defaults.gender" value="male" class="accent-indigo-500"/>
