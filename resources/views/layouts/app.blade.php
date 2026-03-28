@@ -20,12 +20,11 @@
     <body class="font-sans antialiased">
       @if ($enableBackground)
         
-      <div class="min-h-screen bg-gray-100 dark:bg-gray-900 -z-49"
+      <div class="sticky min-h-screen bg-gray-100 dark:bg-gray-900 z-3"
       style="background-image: url(/images/defaults/main.png); background-repeat: no-repeat; backgorud"
       >
       @else
-      <div class="min-h-screen bg-gray-100 dark:bg-gray-900 -z-49"
-      >
+      <div class="sticky min-h-screen bg-gray-100 dark:bg-gray-900 z-2">
       @endif
       @include('layouts.navigation')
       

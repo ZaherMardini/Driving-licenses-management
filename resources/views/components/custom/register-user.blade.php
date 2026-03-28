@@ -86,7 +86,7 @@
               @if (!$loggedIn)
                 <a
                 href="{{ route('login') }}"
-                class="underline text-sm text-gray-600 dark:text-white hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
+                class="underline text-sm text-gray-600 dark:text-white hover:text-cyan-900 dark:hover:text-cyan-100 rounded-md">
                     {{ __('Already registered?') }}
                 </a>
               @endif

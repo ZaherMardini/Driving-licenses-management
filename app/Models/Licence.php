@@ -37,7 +37,7 @@ class Licence extends Model
       LicenceActions::lost->value => ApplicationTypes::LostReplacement->value,
       LicenceActions::damaged->value => ApplicationTypes::DamagedReplacement->value,
     ];
-    public static function applicationExists(Licence $licence, int $typeId){
+    public static function applicationExistsBuilder(Licence $licence, int $typeId){
       return 
       LicenceOperationApplication
         ::where('licence_id', $licence['id'])
@@ -45,8 +45,10 @@ class Licence extends Model
         ->whereHas('application', function($q){
           $q->where('status', '=',ApplicationStatus::New->value)
           ->orWhere('status', '=', ApplicationStatus::Pending->value);
-      })
-      ->exists();
+      });
+    }
+    public static function applicationExists(Licence $licence, int $typeId){
+      return self::applicationExistsBuilder($licence, $typeId)->exists();
     }
     public static function searchBy(){
       return collect(Self::$columns)->except('Class')->toArray();

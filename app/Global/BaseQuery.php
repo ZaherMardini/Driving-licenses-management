@@ -21,7 +21,8 @@ class BaseQuery{
       'application_types.id as service_id',
       'applications.fees as fees',
       'applications.status as status',
-    );
+    )
+    ->orderBy('applications.created_at', 'desc');
   }
   public static function testAppointments(){
     return

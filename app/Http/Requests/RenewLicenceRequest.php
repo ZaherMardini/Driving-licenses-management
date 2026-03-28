@@ -62,7 +62,7 @@ class RenewLicenceRequest extends FormRequest
           return self::detainedLicenceCase($validator);
         }
         $this['licence_service'] = ApplicationTypes::RenewLicence->value;
-        LicenceOperatisonRules::operationApplicationExists($this, $validator, $licence);
+        LicenceOperatisonRules::operationApplicationExists($this, $validator, $licence, 'licence_renew_service');
       });
     }
 }

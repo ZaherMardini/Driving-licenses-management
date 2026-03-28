@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\ApplicationStatus;
 use App\Models\Licence;
 use App\Models\LicenceOperationApplication;
 use App\Rules\LicenceOperatisonRules;
@@ -32,16 +33,19 @@ class ReplaceLicenceRequest extends FormRequest
     public function withValidator($validator){
       $validator->after(function($validator){
         if($validator->errors()->has('licence_replacement_service')){
-            return;
+          return;
         }
         $licence = Licence::findOrFail($this->input('licence_id'));
+        $typeId = Licence::$action2TypeId[ $this['licence_replacement_service'] ];
         if($licence->isDeactivated()){
           return LicenceOperatisonRules::deactivatedLicenceCase($validator, 'licence_replacement_service');
         }
         if($licence->isDetained()){
           return $validator->errors()->add('licence_replacement_service', 'Release licence first');
         }
-        $typeId = Licence::$action2TypeId[ $this['licence_replacement_service'] ];
+        if($licence->isExpired()){
+          return $validator->errors()->add('licence_replacement_service', 'Licence is expired.');
+        }
         $this['licence_service'] = $typeId;
         LicenceOperatisonRules::operationApplicationExists($this, $validator, $licence, 'licence_replacement_service');
       });

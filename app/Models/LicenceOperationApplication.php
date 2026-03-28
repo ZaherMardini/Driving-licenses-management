@@ -29,4 +29,9 @@ class LicenceOperationApplication extends Model
     $application->update(['status' => ApplicationStatus::Completed->value]);
     return $application['id'];
   }
+  public static function justCompleteApplication(Licence $licence, int $application_typeId){
+    $application = LicenceOperationApplication::getApplication($licence, $application_typeId);
+    $application = $application['application'];
+    $application->update(['status' => ApplicationStatus::Completed->value]);
+  }
 }

@@ -35,16 +35,16 @@
           <!-- Remember Me -->
           <div class="block mt-4">
               <label for="remember_me" class="inline-flex items-center">
-                  <input id="remember_me" type="checkbox" class="rounded dark:bg-blue-600/30 border-gray-300 dark:border-gray-700 text-cyan-600 shadow-sm focus:ring-cyan-500 dark:focus:ring-cyan-600 dark:focus:ring-offset-gray-800" name="remember">
+                  <input id="remember_me" type="checkbox" class="rounded dark:bg-blue-600/30 border-gray-300 dark:border-gray-700 text-cyan-600 shadow-sm" name="remember">
                   <span class="ms-2 text-sm dark:text-white">{{ __('Remember me') }}</span>
               </label>
           </div>
           <div class="flex items-center justify-end mt-4">
-            <a class="px-3 underline text-sm dark:text-white dark:hover:text-cyan-400 hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('register') }}">
+            <a class="px-3 underline text-sm dark:text-white dark:hover:text-cyan-400 hover:text-gray-100 rounded-md" href="{{ route('register') }}">
                 {{ __('New user?') }}
             </a>
               @if (Route::has('password.request'))
-                  <a class="underline text-sm  dark:text-white dark:hover:text-cyan-400 hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
+                  <a class="underline text-sm  dark:text-white dark:hover:text-cyan-400 hover:text-gray-100 rounded-md" href="{{ route('password.request') }}">
                       {{ __('Forgot your password?') }}
                   </a>
               @endif

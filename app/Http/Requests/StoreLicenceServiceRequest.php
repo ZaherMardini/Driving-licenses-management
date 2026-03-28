@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\ApplicationTypes;
 use App\Models\Licence;
 use App\Rules\LicenceOperatisonRules;
 
@@ -34,6 +35,9 @@ class StoreLicenceServiceRequest extends FormRequest
         $licence = Licence::findOrFail($this->input('licence_id'));
         if($licence->isDeactivated()){
           return LicenceOperatisonRules::deactivatedLicenceCase($validator, 'licence_id');
+        }
+        if($licence->isExpired() && $this['service_type'] !== ApplicationTypes::RenewLicence->value){
+          return $validator->errors()->add('licence_id', 'Licence is expired, only renew service allowed.');
         }
         LicenceOperatisonRules::operationApplicationDuplicated($this, $validator, $licence);
       });
