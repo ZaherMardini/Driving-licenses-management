@@ -18,7 +18,7 @@ return new class extends Migration
         Schema::create('test_appointments', function (Blueprint $table) {
           $table->id();
           $table->foreignIdFor(TestType::class)->nullable(false);
-          $table->foreignIdFor(Person::class)->nullable(false);
+          $table->foreignIdFor(Person::class)->index()->nullable(false);
           $table->foreignIdFor(LocalLicence::class)->nullable(false);
           $table->boolean('isLocked')->default(false);
           $table->date('appointment_date')->nullable(false);

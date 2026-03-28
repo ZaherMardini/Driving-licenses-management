@@ -17,7 +17,7 @@ return new class extends Migration
         Schema::create('local_licences', function (Blueprint $table) {
           $table->id();
           $table->foreignIdFor(LicenceClass::class)->nullable(false);
-          $table->foreignIdFor(Person::class)->nullable(false)->constrained()->cascadeOnDelete();
+          $table->foreignIdFor(Person::class)->index()->nullable(false)->constrained()->cascadeOnDelete();
           $table->foreignIdFor(Application::class)->nullable(false)->constrained()->cascadeOnDelete();
           $table->timestamps();
 

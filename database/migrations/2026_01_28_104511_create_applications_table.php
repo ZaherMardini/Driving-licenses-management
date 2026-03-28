@@ -19,7 +19,7 @@ return new class extends Migration
         $table->id();
         $table->foreignIdFor(ApplicationType::class)->nullable(false);
         $table->foreignIdFor(User::class, 'created_by_user')->nullable(false);
-        $table->foreignIdFor(Person::class)->nullable(false);
+        $table->foreignIdFor(Person::class)->index()->nullable(false);
         $table->decimal('fees',5,2);
         $table->string('status')->default(ApplicationStatus::New->value);
         $table->timestamps();

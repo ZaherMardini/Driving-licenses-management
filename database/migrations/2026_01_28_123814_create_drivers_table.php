@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('drivers', function (Blueprint $table) {
           $table->id();
-          $table->foreignIdFor(Person::class)->unique();
+          $table->foreignIdFor(Person::class)->index()->unique();
           $table->timestamps();
         });
     }
